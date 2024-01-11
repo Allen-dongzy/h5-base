@@ -1,0 +1,164 @@
+// 宽度容器
+@mixin box-w($w: 100%, $background: null) {
+  width: $w;
+  box-sizing: border-box;
+
+  @if ($background !=null) {
+    background: $background;
+  }
+}
+
+// 高度容器
+@mixin box-h($h: 100%, $background: null) {
+  height: $h;
+  box-sizing: border-box;
+
+  @if ($background !=null) {
+    background: $background;
+  }
+}
+
+// 自定义容器
+@mixin box($w: 100%, $h: 100%, $background: null) {
+  width: $w;
+  height: $h;
+
+  @if ($background !=null) {
+    background: $background;
+  }
+
+  box-sizing: border-box;
+}
+
+// 弹性盒子容器-居中
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// 弹性盒子容器-row
+@mixin flex-row($main: flex-start, $cross: center) {
+  display: flex;
+  justify-content: $main;
+  align-items: $cross;
+}
+
+// 弹性盒子-换行
+@mixin flex-wrap {
+  @include flex-row();
+  flex-wrap: wrap;
+}
+
+// 弹性盒子容器-col
+@mixin flex-col($main: flex-start, $cross: center) {
+  display: flex;
+  flex-direction: column;
+  justify-content: $main;
+  align-items: $cross;
+}
+
+// 文本超出隐藏
+@mixin text-hide($row: 1) {
+  @if $row == 1 {
+    display: block;
+    white-space: nowrap; // 强制不换行
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $row;
+    -webkit-box-orient: vertical;
+    word-break: break-all; // 断字点换行
+    word-wrap: break-word; // 以防万一，强制换行
+  }
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+// 保留文本格式(比如多空格)
+@mixin text-reserve {
+  white-space: pre-wrap;
+}
+
+// 文本两端对齐
+@mixin text-both {
+  text-align: justify;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+// 文本颜色渐变
+@mixin font-gradient($deg, $color1, $color2) {
+  background: linear-gradient($deg, $color1, $color2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+// 文字属性设置
+@mixin font-set($size: inherit, $color: rgba(0, 0, 0, 0), $weight: normal) {
+  font-size: $size;
+
+  @if ($color !=rgba(0, 0, 0, 0)) {
+    color: $color;
+  }
+
+  @if ($weight !=normal) {
+    font-weight: $weight;
+  }
+}
+
+// 当前元素无法选中（pc乱点不会出现蓝色的背景块，移动不能长按选中）
+@mixin sel-hide {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+// 细线-水平
+@mixin border-w($c: #ddd, $n: 0.5) {
+  width: 100%;
+  height: 1px;
+  background: $c;
+  color: $c;
+  transform-origin: 0 0;
+  transform: scaleX($n);
+}
+
+// 细线-垂直
+@mixin border-h($c: #ddd, $n: 0.5) {
+  width: 1px;
+  height: 100%;
+  background: $c;
+  color: $c;
+  transform-origin: 0 0;
+  transform: scaleY($n);
+}
+
+// 方块
+@mixin square($w: 100%, $background: null) {
+  @include box($w, $w, $background);
+}
+
+// 圆形
+@mixin circle($w: 100%, $background: null) {
+  @include square($w, $background);
+  border-radius: 50%;
+}
+
+// 设置placeholder颜色
+@mixin placeholder($c: #ddd, $selector: input) {
+  #{$selector}::-webkit-input-placeholder {
+    color: $c;
+  }
+
+  #{$selector}::-moz-input-placeholder {
+    color: $c;
+  }
+
+  #{$selector}::-ms-input-placeholder {
+    color: $c;
+  }
+}
+

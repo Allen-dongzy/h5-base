@@ -1,0 +1,110 @@
+body,
+header,
+section,
+footer,
+div,
+ul,
+ol,
+li,
+img,
+a,
+span,
+em,
+center,
+strong,
+fieldset,
+form,
+label,
+dl,
+dt,
+dd,
+input,
+hr,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-style: normal;
+}
+
+html,
+body,
+page {
+  font-family: PingFangSC-Regular, PingFang SC;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+  height: auto;
+}
+
+a {
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+html,
+body {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+input,
+textarea,
+button {
+  cursor: pointer;
+  outline: 0;
+  -webkit-appearance: none;
+}
+
+input:-webkit-autofill  {
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+span {
+  -webkit-tap-highlight-color: transparent;
+}
+
+li {
+  list-style: none;
+}
+
+input {
+  outline: none;
+}
+
+textarea {
+  overflow: hidden;
+  resize: none;
+  outline: none;
+}
+
+input:focus,
+a:focus {
+  outline: none;
+}
+
+i {
+  font-style: normal;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button::after {
+  border: none !important;
+}
