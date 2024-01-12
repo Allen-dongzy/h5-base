@@ -270,6 +270,16 @@ const goPath = (info: Menu) => {
       margin: 0 30px;
       padding: 30px;
       box-sizing: border-box;
+      &::-webkit-scrollbar {
+        width: 4px;
+        background: #eeeeee;
+        border-radius: 10px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #cccccc;
+        border-radius: 10px;
+        box-shadow: 0 0 3px #999;
+      }
     }
   }
   &-breadcrumb {
