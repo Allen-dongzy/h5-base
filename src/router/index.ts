@@ -1,14 +1,72 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import {
+  PieChartOutlined,
+  DesktopOutlined,
+  MailOutlined
+} from '@ant-design/icons-vue'
+
+export const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'layout',
+    component: () => import('@/layout/Layout.vue'),
+    meta: {
+      title: 'DIOR 管理后台'
+    },
+    children: [{
+      path: 'route1',
+      name: 'route1',
+      component: () => import('@/views/Example.vue'),
+      meta: {
+        title: 'route1',
+        icon: PieChartOutlined
+      },
+      children: [{
+        path: 'route10',
+        name: 'route10',
+        component: () => import('@/views/Example.vue'),
+        meta: {
+          title: 'route10'
+        }
+      }]
+    }, {
+      path: 'route2',
+      name: 'route2',
+      component: () => import('@/views/Example.vue'),
+      meta: {
+        title: 'route2',
+        icon: DesktopOutlined
+      }
+    }, {
+      path: 'route3',
+      name: 'route3',
+      component: () => import('@/views/Example.vue'),
+      meta: {
+        title: 'route3',
+        icon: MailOutlined
+      },
+      children: [{
+        path: 'route30',
+        name: 'route30',
+        component: () => import('@/views/Example.vue'),
+        meta: {
+          title: 'route30'
+        }
+      }, {
+        path: 'route31',
+        name: 'route31',
+        component: () => import('@/views/Example.vue'),
+        meta: {
+          title: 'route31'
+        }
+      }]
+    }]
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'layout',
-      component: () => import('@/layout/Layout.vue')
-    }
-  ]
+  routes
 })
 
 export default router

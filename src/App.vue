@@ -32,24 +32,15 @@ router.beforeEach((to, from, next) => {
 const { locale } = useI18n()
 // 设置i18n语言
 locale.value = lang.value
-
-// 主题
-const theme = {
-  token: {
-    colorPrimary: '#000000'
-  }
-}
 </script>
 
 <template>
   <router-view v-slot="{ Component }">
-    <transition name="slide-left">
-      <!-- 动态更新keep-alive -->
-      <keep-alive :include="routeStack">
-        <a-config-provider :theme="theme">
+    <transition name="fade-transform" mode="out-in">
+        <!-- 动态更新keep-alive -->
+        <keep-alive :include="routeStack">
           <component :is="Component" />
-        </a-config-provider>
-      </keep-alive>
+        </keep-alive>
     </transition>
   </router-view>
 </template>
