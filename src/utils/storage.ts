@@ -1,4 +1,4 @@
-const STORAGE_KEY: string = 'dior-operation-lab-store'
+const STORAGE_KEY: string = 'admin-storage'
 
 const storage = {
 
