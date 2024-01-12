@@ -3,16 +3,10 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router'
 import type { Menu, MenuEvent } from '@/types/view/Layout'
+import theme from '@/layout/theme'
 
 const route = useRoute()
 const router = useRouter()
-
-// 主题
-const theme = {
-  token: {
-    colorPrimary: '#000000'
-  }
-}
 
 // 菜单
 const menu = computed(() => {
@@ -74,7 +68,7 @@ watch(
   () => {
     if (!menu.value || menu.value.length === 0) return
     // 若有路由,则从路由设置菜单项,反之初始化菜单项
-    if (route.fullPath) {
+    if (route.fullPath && route.fullPath !== '/') {
       const path = route.fullPath.split('/').slice(1)
       menuOpenKeys.value = path
       menuSelectedKeys.value = [path[path.length - 1]]

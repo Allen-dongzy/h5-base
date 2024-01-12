@@ -61,6 +61,11 @@ export const routes: RouteRecordRaw[] = [
         }
       }]
     }]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFind',
+    component: () => import('@/views/NotFind.vue')
   }
 ]
 
