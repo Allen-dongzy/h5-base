@@ -190,3 +190,18 @@
   -khtml-user-select: none;
   user-select: none;
 }
+
+// 隐藏垂直滚动条
+.hide-scrollbar-y::-webkit-scrollbar {
+  display: none;
+}
+
+// 隐藏水平滚动条
+.hide-scrollbar-x::-webkit-scrollbar-horizontal {
+  display: none;
+}
+
+// 隐藏滚动条-Firefox
+.hide-scrollbar-width {
+  scrollbar-width: none;
+}
