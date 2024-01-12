@@ -86,6 +86,18 @@ const siderCollapsed = ref(false)
 const toggleSiderCollapsed = () => {
   siderCollapsed.value = !siderCollapsed.value
 }
+
+// 前往首页
+const goHome = () => {
+  router.replace('/')
+}
+
+// 前往指定路径
+const goPath = (info: Menu) => {
+  const currentIndex = menuOpenKeys.value.findIndex((item) => item === info.key)
+  const pathArr = menuOpenKeys.value.slice(0, currentIndex + 1)
+  router.replace(`/${pathArr.join('/')}`)
+}
 </script>
 
 <template>
@@ -98,7 +110,7 @@ const toggleSiderCollapsed = () => {
           :collapsedWidth="100"
         >
           <div class="layout-sider-logo flex-row-center sel-hide">
-            <img src="@/assets/imgs/logo-black.png" alt="logo" />
+            <img src="@/assets/imgs/logo-black.png" alt="logo" @click="goHome" />
           </div>
           <div class="sel-hide">
             <a-menu
@@ -123,13 +135,18 @@ const toggleSiderCollapsed = () => {
                 class="layout-header-collapsed"
                 @click="toggleSiderCollapsed"
               />
-              {{ routes?.[0]?.meta?.title || '管理后台' }}
+              <span @click="goHome">{{ routes?.[0]?.meta?.title || '管理后台' }}</span>
             </div>
             <FunctionBar />
           </a-layout-header>
           <a-layout-content class="layout-content">
             <a-breadcrumb class="layout-breadcrumb sel-hide">
-              <a-breadcrumb-item v-for="item in breadcrumb" :key="item.key">
+              <a-breadcrumb-item
+                class="layout-breadcrumb-item"
+                v-for="item in breadcrumb"
+                :key="item.key"
+                @click="goPath(item)"
+              >
                 {{ item.title }}
               </a-breadcrumb-item>
             </a-breadcrumb>
@@ -157,6 +174,7 @@ const toggleSiderCollapsed = () => {
       img {
         width: 72px;
         height: 20px;
+        cursor: pointer;
       }
     }
     // 菜单展开项背景色
@@ -237,6 +255,9 @@ const toggleSiderCollapsed = () => {
     }
     &-title {
       height: 100%;
+      & > span {
+        cursor: pointer;
+      }
     }
   }
   &-content {
@@ -253,6 +274,9 @@ const toggleSiderCollapsed = () => {
   }
   &-breadcrumb {
     padding: 20px 30px;
+    &-item {
+      cursor: pointer;
+    }
   }
 }
 </style>

@@ -10,13 +10,14 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'layout',
     component: () => import('@/layout/Layout.vue'),
+    redirect: '/route1/route10',
     meta: {
       title: 'DIOR 管理后台'
     },
     children: [{
       path: 'route1',
       name: 'route1',
-      component: () => import('@/views/Example.vue'),
+      redirect: '/route1/route10',
       meta: {
         title: 'route1',
         icon: PieChartOutlined
@@ -40,7 +41,7 @@ export const routes: RouteRecordRaw[] = [
     }, {
       path: 'route3',
       name: 'route3',
-      component: () => import('@/views/Example.vue'),
+      redirect: '/route3/route30',
       meta: {
         title: 'route3',
         icon: MailOutlined
