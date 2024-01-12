@@ -1,32 +1,32 @@
 // 请求头格式
-export type IContentType =
+export type ContentType =
   | 'application/json'
   | 'application/x-www-form-urlencoded'
   | 'multipart/form-data'
 
 // 请求方法
-export type IMethod = 'get' | 'post' | 'put' | 'delete'
+export type Method = 'get' | 'post' | 'put' | 'delete'
 
 // 请求失败不显示提示
-export interface IRequestConfig {
+export interface RequestConfig {
   errNoTip?: boolean
 }
 
 // 请求体
-export interface IRequestData<T = any> extends IRequestConfig {
+export interface RequestData<T = any> extends RequestConfig {
   data: T
-  method: IMethod
+  method: Method
   url: string
   headers?: {
-    'Content-Type'?: IContentType
+    'Content-Type'?: ContentType
     responseType?: 'blob'
   }
-  contentType?: IContentType
+  contentType?: ContentType
   responseType?: 'blob'
 }
 
 // 返回体
-export interface IResponseData<T = any> {
+export interface ResponseData<T = any> {
   [index: number]: number
   code?: number
   data?: T

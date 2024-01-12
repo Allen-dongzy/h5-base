@@ -2,7 +2,7 @@ import type { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { objRemoveEmpty, objKeySort, objToQuery } from '@/utils/tools'
-import type { IRequestData, IResponseData, IContentType } from './type'
+import type { RequestData, ResponseData, ContentType } from './type'
 import useUrlToJump from '@/composables/useUrlToJump'
 import useUserStore from '@/stores/useUserStore'
 
@@ -54,8 +54,8 @@ Server.interceptors.request.use(
 // 响应拦截器
 Server.interceptors.response.use(
   // 拦截到响应对象，将响应对象的 data 属性返回给调用的地方
-  (res: AxiosResponse<IResponseData>) => {
-    const data = res.data as IResponseData
+  (res: AxiosResponse<ResponseData>) => {
+    const data = res.data as ResponseData
     if (data instanceof Blob) return Promise.resolve(data)
     if (!Object.prototype.hasOwnProperty.call(data, 'code')) return Promise.resolve(data)
     if (data.code !== 1) {
@@ -70,7 +70,7 @@ Server.interceptors.response.use(
         writeUrl(window.location.href)
         // 跳转到登陆页
         window.location.replace('/login')
-      } else if (!(res.config as IRequestData).errNoTip) {
+      } else if (!(res.config as RequestData).errNoTip) {
         message.error(data.code_dec || '请求失败')
       }
       return Promise.reject(data)
@@ -82,13 +82,13 @@ Server.interceptors.response.use(
 
 
 // 获取请求头ContentType
-const contentType: Record<string, IContentType> = {
+const contentType: Record<string, ContentType> = {
   'get': 'application/x-www-form-urlencoded',
   'post': 'application/json'
 }
 
 // 参数转换
-const transRequestData = (requestData: IRequestData) => {
+const transRequestData = (requestData: RequestData) => {
   requestData.headers = requestData.headers || {}
   if (requestData.contentType) {
     requestData.headers['Content-Type'] = requestData.contentType
@@ -103,7 +103,7 @@ const transRequestData = (requestData: IRequestData) => {
 }
 
 // 请求request
-const request = async (requestData: IRequestData) => {
+const request = async (requestData: RequestData) => {
   // 参数转换
   transRequestData(requestData)
   // Promise的then和catch处理包装
