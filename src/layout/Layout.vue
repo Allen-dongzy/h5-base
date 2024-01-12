@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
+import FunctionBar from '@/layout/components/FunctionBar.vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router'
 import type { Menu, MenuEvent } from '@/types/view/Layout'
@@ -111,17 +112,20 @@ const toggleSiderCollapsed = () => {
         </a-layout-sider>
         <a-layout>
           <a-layout-header class="layout-header flex-row sel-hide">
-            <MenuUnfoldOutlined
-              v-if="siderCollapsed"
-              class="layout-header-collapsed"
-              @click="toggleSiderCollapsed"
-            />
-            <MenuFoldOutlined
-              v-else
-              class="layout-header-collapsed"
-              @click="toggleSiderCollapsed"
-            />
-            {{ routes?.[0]?.meta?.title || '管理后台' }}
+            <div class="layout-header-title flex-row">
+              <MenuUnfoldOutlined
+                v-if="siderCollapsed"
+                class="layout-header-collapsed"
+                @click="toggleSiderCollapsed"
+              />
+              <MenuFoldOutlined
+                v-else
+                class="layout-header-collapsed"
+                @click="toggleSiderCollapsed"
+              />
+              {{ routes?.[0]?.meta?.title || '管理后台' }}
+            </div>
+            <FunctionBar />
           </a-layout-header>
           <a-layout-content class="layout-content">
             <a-breadcrumb class="layout-breadcrumb sel-hide">
@@ -230,6 +234,9 @@ const toggleSiderCollapsed = () => {
       margin-left: 8px;
       font-size: 20px;
       color: #45301d;
+    }
+    &-title {
+      height: 100%;
     }
   }
   &-content {
