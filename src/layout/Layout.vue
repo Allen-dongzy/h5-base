@@ -114,8 +114,8 @@ const goPath = (info: Menu) => {
           </div>
           <div class="sel-hide">
             <a-menu
-              v-model:openKeys="menuOpenKeys"
-              v-model:selectedKeys="menuSelectedKeys"
+              :openKeys="menuOpenKeys"
+              :selectedKeys="menuSelectedKeys"
               mode="inline"
               :items="menu"
               @click="menuClick"

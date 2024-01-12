@@ -10,9 +10,9 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'layout',
     component: () => import('@/layout/Layout.vue'),
-    redirect: '/route1/route10',
+    redirect: '/route1',
     meta: {
-      title: 'DIOR 管理后台'
+      title: '管理后台模板'
     },
     children: [{
       path: 'route1',

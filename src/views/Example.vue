@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" name="example">
 const route = useRoute()
 
 const path = computed(() => route.fullPath)

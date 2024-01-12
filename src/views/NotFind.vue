@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" name="notFind">
 import theme from '@/layout/theme'
 import { useRouter } from 'vue-router'
 
