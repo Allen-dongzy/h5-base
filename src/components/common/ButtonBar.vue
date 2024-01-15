@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ButtonBarProps } from '@/types/components/ButtonBar.ts'
+import type { Buttons } from '@/types/components/ButtonBar.ts'
 
 interface Props {
   size: number // 间距
-  buttons: Record<string, ButtonBarProps>
+  buttons: Buttons
 }
 const props = withDefaults(defineProps<Props>(), {
   size: 10

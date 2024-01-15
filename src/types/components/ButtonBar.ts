@@ -1,6 +1,7 @@
 import type { VNode } from 'vue'
 
-export interface ButtonBarProps {
+// button配置项
+export interface ButtonItem {
   text: string,
   type?: 'primary' | 'default' | 'dashed' | 'link' | 'text',
   size?: 'large' | 'middle' | 'small',
@@ -9,3 +10,6 @@ export interface ButtonBarProps {
   icon?: VNode,
   click?: (...args: any[]) => void
 }
+
+// button配置项集合
+export type Buttons = Record<string, ButtonItem>
