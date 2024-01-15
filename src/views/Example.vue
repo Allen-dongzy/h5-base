@@ -56,7 +56,7 @@ const filters = reactive<Filters>({
     mode: 'multiple',
     options: [],
     change: (value: string) => {
-      console.log('type', value)
+      console.log('store', value)
     }
   }
 })
