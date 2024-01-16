@@ -2,7 +2,7 @@
 import useAppStore from '@/stores/useAppStore'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import theme from '@/layout/theme'
+import theme from '@/theme'
 import localeZh from 'ant-design-vue/es/locale/zh_CN'
 import localeEn from 'ant-design-vue/es/locale/en_US'
 import 'dayjs/locale/zh-cn'
@@ -66,3 +66,4 @@ watch(
 </template>
 
 <style scoped lang="scss"></style>
+@/views/theme
