@@ -5,9 +5,32 @@ import type { RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router'
 import type { Menu, MenuEvent } from '@/types/view/Layout'
 import theme from '@/layout/theme'
+import useAppStore from '@/stores/useAppStore'
+import localeZh from 'ant-design-vue/es/locale/zh_CN'
+import localeEn from 'ant-design-vue/es/locale/en_US'
+import 'dayjs/locale/zh-cn'
+import 'dayjs/locale/en'
+import dayjs from 'dayjs'
 
 const route = useRoute()
 const router = useRouter()
+
+// app商店
+const appStore = useAppStore()
+
+// 语言
+const { lang } = storeToRefs(appStore)
+// antd语言
+const antdLocale = ref(localeZh)
+// 切换antd语言
+watch(
+  () => lang.value,
+  () => {
+    antdLocale.value = lang.value === 'zh' ? localeZh : localeEn
+    dayjs.locale(lang.value)
+  },
+  { immediate: true }
+)
 
 // 菜单
 const menu = computed(() => {
@@ -107,7 +130,7 @@ const logout = () => {
 
 <template>
   <div class="layout">
-    <a-config-provider :theme="theme">
+    <a-config-provider :theme="theme" :locale="locale">
       <a-layout class="layout">
         <a-layout-sider
           class="layout-sider"
