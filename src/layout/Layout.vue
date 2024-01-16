@@ -4,33 +4,9 @@ import FunctionBar from '@/layout/components/FunctionBar.vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router'
 import type { Menu, MenuEvent } from '@/types/view/Layout'
-import theme from '@/layout/theme'
-import useAppStore from '@/stores/useAppStore'
-import localeZh from 'ant-design-vue/es/locale/zh_CN'
-import localeEn from 'ant-design-vue/es/locale/en_US'
-import 'dayjs/locale/zh-cn'
-import 'dayjs/locale/en'
-import dayjs from 'dayjs'
 
 const route = useRoute()
 const router = useRouter()
-
-// app商店
-const appStore = useAppStore()
-
-// 语言
-const { lang } = storeToRefs(appStore)
-// antd语言
-const antdLocale = ref(localeZh)
-// 切换antd语言
-watch(
-  () => lang.value,
-  () => {
-    antdLocale.value = lang.value === 'zh' ? localeZh : localeEn
-    dayjs.locale(lang.value)
-  },
-  { immediate: true }
-)
 
 // 菜单
 const menu = computed(() => {
@@ -130,61 +106,55 @@ const logout = () => {
 
 <template>
   <div class="layout">
-    <a-config-provider :theme="theme" :locale="antdLocale">
-      <a-layout class="layout">
-        <a-layout-sider
-          class="layout-sider"
-          v-model:collapsed="siderCollapsed"
-          :collapsedWidth="100"
-        >
-          <div class="layout-sider-logo flex-row-center sel-hide">
-            <img src="@/assets/imgs/logo-black.png" alt="logo" @click="goHome" />
+    <a-layout class="layout">
+      <a-layout-sider class="layout-sider" v-model:collapsed="siderCollapsed" :collapsedWidth="100">
+        <div class="layout-sider-logo flex-row-center sel-hide">
+          <img src="@/assets/imgs/logo-black.png" alt="logo" @click="goHome" />
+        </div>
+        <div class="sel-hide">
+          <a-menu
+            :openKeys="menuOpenKeys"
+            :selectedKeys="menuSelectedKeys"
+            mode="inline"
+            :items="menu"
+            @click="menuClick"
+          ></a-menu>
+        </div>
+      </a-layout-sider>
+      <a-layout>
+        <a-layout-header class="layout-header flex-row sel-hide">
+          <div class="layout-header-title flex-row">
+            <MenuUnfoldOutlined
+              v-if="siderCollapsed"
+              class="layout-header-collapsed"
+              @click="toggleSiderCollapsed"
+            />
+            <MenuFoldOutlined
+              v-else
+              class="layout-header-collapsed"
+              @click="toggleSiderCollapsed"
+            />
+            <span @click="goHome">{{ routes?.[0]?.meta?.title || '管理后台' }}</span>
           </div>
-          <div class="sel-hide">
-            <a-menu
-              :openKeys="menuOpenKeys"
-              :selectedKeys="menuSelectedKeys"
-              mode="inline"
-              :items="menu"
-              @click="menuClick"
-            ></a-menu>
-          </div>
-        </a-layout-sider>
-        <a-layout>
-          <a-layout-header class="layout-header flex-row sel-hide">
-            <div class="layout-header-title flex-row">
-              <MenuUnfoldOutlined
-                v-if="siderCollapsed"
-                class="layout-header-collapsed"
-                @click="toggleSiderCollapsed"
-              />
-              <MenuFoldOutlined
-                v-else
-                class="layout-header-collapsed"
-                @click="toggleSiderCollapsed"
-              />
-              <span @click="goHome">{{ routes?.[0]?.meta?.title || '管理后台' }}</span>
-            </div>
-            <FunctionBar @logout="logout" />
-          </a-layout-header>
-          <a-layout-content class="layout-content">
-            <a-breadcrumb class="layout-breadcrumb sel-hide">
-              <a-breadcrumb-item
-                class="layout-breadcrumb-item"
-                v-for="item in breadcrumb"
-                :key="item.key"
-                @click="goPath(item)"
-              >
-                {{ item.title }}
-              </a-breadcrumb-item>
-            </a-breadcrumb>
-            <a-layout class="layout-content-main">
-              <router-view />
-            </a-layout>
-          </a-layout-content>
-        </a-layout>
+          <FunctionBar @logout="logout" />
+        </a-layout-header>
+        <a-layout-content class="layout-content">
+          <a-breadcrumb class="layout-breadcrumb sel-hide">
+            <a-breadcrumb-item
+              class="layout-breadcrumb-item"
+              v-for="item in breadcrumb"
+              :key="item.key"
+              @click="goPath(item)"
+            >
+              {{ item.title }}
+            </a-breadcrumb-item>
+          </a-breadcrumb>
+          <a-layout class="layout-content-main">
+            <router-view />
+          </a-layout>
+        </a-layout-content>
       </a-layout>
-    </a-config-provider>
+    </a-layout>
   </div>
 </template>
 
