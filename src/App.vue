@@ -20,18 +20,6 @@ const { routeStack, lang } = storeToRefs(appStore)
 // 初始化路由栈
 clearRouteStack()
 
-// antd语言
-const antdLocale = ref(localeZh)
-// 初始化antd语言
-watch(
-  () => lang.value,
-  () => {
-    antdLocale.value = lang.value === 'zh' ? localeZh : localeEn
-    dayjs.locale(lang.value)
-  },
-  { immediate: true }
-)
-
 // 路由守卫
 router.beforeEach((to, from, next) => {
   // 待写入路由栈
@@ -50,6 +38,18 @@ router.beforeEach((to, from, next) => {
 const { locale } = useI18n()
 // 设置i18n语言
 locale.value = lang.value
+
+// antd语言
+const antdLocale = ref(localeZh)
+// 初始化antd语言
+watch(
+  () => lang.value,
+  () => {
+    antdLocale.value = lang.value === 'zh' ? localeZh : localeEn
+    dayjs.locale(lang.value)
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
