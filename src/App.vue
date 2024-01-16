@@ -9,7 +9,7 @@ const router = useRouter()
 const appStore = useAppStore()
 // 设置路由栈
 const { setRouteStack, clearRouteStack } = appStore
-// 路由栈
+// 路由栈, 语言
 const { routeStack, lang } = storeToRefs(appStore)
 // 初始化路由栈
 clearRouteStack()
