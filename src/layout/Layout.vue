@@ -98,6 +98,11 @@ const goPath = (info: Menu) => {
   const pathArr = menuOpenKeys.value.slice(0, currentIndex + 1)
   router.replace(`/${pathArr.join('/')}`)
 }
+
+// 退出登录
+const logout = () => {
+  router.replace('/login')
+}
 </script>
 
 <template>
@@ -137,7 +142,7 @@ const goPath = (info: Menu) => {
               />
               <span @click="goHome">{{ routes?.[0]?.meta?.title || '管理后台' }}</span>
             </div>
-            <FunctionBar />
+            <FunctionBar @logout="logout" />
           </a-layout-header>
           <a-layout-content class="layout-content">
             <a-breadcrumb class="layout-breadcrumb sel-hide">
@@ -265,6 +270,7 @@ const goPath = (info: Menu) => {
     background: #f7f7f7;
     &-main {
       height: calc(100% - 62px - 30px);
+      overflow-x: hidden;
       overflow-y: auto;
       background: #ffffff;
       margin: 0 30px;
@@ -272,11 +278,11 @@ const goPath = (info: Menu) => {
       box-sizing: border-box;
       &::-webkit-scrollbar {
         width: 4px;
-        background: #eeeeee;
+        background: #f7f7f7;
         border-radius: 10px;
       }
       &::-webkit-scrollbar-thumb {
-        background: #cccccc;
+        background: #e1e1e1;
         border-radius: 10px;
         box-shadow: 0 0 3px #999;
       }
