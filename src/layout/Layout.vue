@@ -130,7 +130,7 @@ const logout = () => {
 
 <template>
   <div class="layout">
-    <a-config-provider :theme="theme" :locale="locale">
+    <a-config-provider :theme="theme" :locale="antdLocale">
       <a-layout class="layout">
         <a-layout-sider
           class="layout-sider"
