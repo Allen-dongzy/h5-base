@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" name="layout">
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import FunctionBar from '@/layout/components/FunctionBar.vue'
 import type { RouteRecordRaw } from 'vue-router'

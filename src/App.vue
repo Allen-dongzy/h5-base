@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
   const stack = to.matched && to.matched.length > 1 ? to.matched : [to]
   // 写入路由
   stack.forEach((item) => {
-    if (item.name === 'tabbar') {
+    if (item.name === 'layout') {
       clearRouteStack()
     }
     setRouteStack(item.name as string)
