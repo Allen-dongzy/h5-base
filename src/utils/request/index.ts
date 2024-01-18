@@ -5,6 +5,12 @@ import { objRemoveEmpty, objKeySort, objToQuery, debounce } from '@/utils/tools'
 import type { RequestData, ResponseData, ContentType } from './type'
 import useUserStore from '@/stores/useUserStore'
 
+// 获取请求头ContentType
+const contentType: Record<string, ContentType> = {
+  'get': 'application/x-www-form-urlencoded',
+  'post': 'application/json'
+}
+
 // 创建对象
 const Server: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_HOST + import.meta.env.VITE_APP_API_URL_PREFIX,
@@ -19,23 +25,29 @@ const setHeader = (config: AxiosRequestConfig) => {
   const { token } = storeToRefs(userStore)
   // 判断是否走JWT
   if (token.value) {
-    (config.headers as any).authorization = token.value
+    (config.headers as any).token = token.value
   }
 }
 
 // 设置url
 const setUrl = (config: AxiosRequestConfig) => {
-  config.url = `${config.url}`
+  if (config.headers!['Content-Type'] === contentType.get) {
+    // 若请求头是表单,就将data参数query化并添加到url(某些接口会有post请求但是请求头又是表单的极端情况)
+    config.url += `${objToQuery(config.data)}`
+  } else {
+    // 普通赋值
+    config.url += `${config.url}`
+  }
 }
 
 // 设置请求内容
 const setData = (config: AxiosRequestConfig) => {
-  // 将data中的值做一层空值过滤并且字典排序
-  config.data = objKeySort(objRemoveEmpty(config.data))
-  // 若是get请求就将data参数query化并添加到url后,最后清空data
-  if (config.method?.toLowerCase() === 'get') {
-    config.url += `${objToQuery(config.data)}`
+  if (config.headers!['Content-Type'] === contentType.get) {
+    // 若请求头是表单,就清空data(参数在url后)
     config.data = {}
+  } else {
+    // 将data中的值做一层空值过滤并且字典排序
+    config.data = objKeySort(objRemoveEmpty(config.data))
   }
 }
 
@@ -57,8 +69,8 @@ Server.interceptors.response.use(
     const data = res.data as ResponseData
     if (data instanceof Blob) return Promise.resolve(data)
     if (!Object.prototype.hasOwnProperty.call(data, 'code')) return Promise.resolve(data)
-    if (data.code !== 1) {
-      if ([203, 204].includes(data.code as number)) {
+    if (data.code !== 200) {
+      if ([401].includes(data.code as number)) {
         goLogin()
       } else if (!(res.config as RequestData).errNoTip) {
         message.error(data.code_dec || '请求失败')
@@ -79,12 +91,6 @@ const goLogin = debounce(() => {
   // 跳转到登陆页
   window.location.replace(`/login?redirect=${encodeURIComponent(window.location.href)}`)
 })
-
-// 获取请求头ContentType
-const contentType: Record<string, ContentType> = {
-  'get': 'application/x-www-form-urlencoded',
-  'post': 'application/json'
-}
 
 // 参数转换
 const transRequestData = (requestData: RequestData) => {
