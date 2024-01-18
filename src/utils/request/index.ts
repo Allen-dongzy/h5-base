@@ -1,9 +1,8 @@
 import type { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
-import { objRemoveEmpty, objKeySort, objToQuery } from '@/utils/tools'
+import { objRemoveEmpty, objKeySort, objToQuery, debounce } from '@/utils/tools'
 import type { RequestData, ResponseData, ContentType } from './type'
-import useUrlToJump from '@/composables/useUrlToJump'
 import useUserStore from '@/stores/useUserStore'
 
 // 创建对象
@@ -60,16 +59,7 @@ Server.interceptors.response.use(
     if (!Object.prototype.hasOwnProperty.call(data, 'code')) return Promise.resolve(data)
     if (data.code !== 1) {
       if ([203, 204].includes(data.code as number)) {
-        message.error('登录状态失效,正在前往登录...')
-        // 清空token,用户信息
-        const { setToken, setUserinfo } = useUserStore()
-        setToken()
-        setUserinfo()
-        // 设置当前url为待跳转url,登陆成功后恢复跳转
-        const { writeUrl } = useUrlToJump()
-        writeUrl(window.location.href)
-        // 跳转到登陆页
-        window.location.replace('/login')
+        goLogin()
       } else if (!(res.config as RequestData).errNoTip) {
         message.error(data.code_dec || '请求失败')
       }
@@ -80,6 +70,15 @@ Server.interceptors.response.use(
   (err) => Promise.reject(err)
 )
 
+// 前往登录
+const goLogin = debounce(() => {
+  // 清空token,用户信息
+  const { setToken, setUserinfo } = useUserStore()
+  setToken()
+  setUserinfo()
+  // 跳转到登陆页
+  window.location.replace(`/login?redirect=${encodeURIComponent(window.location.href)}`)
+})
 
 // 获取请求头ContentType
 const contentType: Record<string, ContentType> = {
