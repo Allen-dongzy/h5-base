@@ -36,6 +36,16 @@ export default defineConfig(({ command, mode }) => {
           additionalData: '@import "@/assets/styles/mixins.scss";' // 每个scss文件会自动加入这段导入mixin的代码
         }
       }
+    },
+    server: {
+      port: 6666,
+      proxy: {
+        // 代理接口
+        [env.VITE_APP_API_URL_PREFIX]: {
+          target: env.VITE_APP_HOST,
+          changeOrigin: true
+        }
+      }
     }
   }
 })
