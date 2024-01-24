@@ -36,7 +36,7 @@ const setUrl = (config: AxiosRequestConfig) => {
     config.url += `${objToQuery(config.data)}`
   } else {
     // 普通赋值
-    config.url += `${config.url}`
+    config.url = `${config.url}`
   }
 }
 
