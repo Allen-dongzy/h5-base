@@ -5,14 +5,52 @@ import type { RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router'
 import type { Menu, MenuEvent } from '@/types/view/Layout'
 
+// 副作用区域-start
+const userinfo = ref({
+  roleIds: ['admin']
+})
+
+// 是否有权限
+const isPermission = (roles: string[]) => {
+  return roles.some((role) => userinfo.value.roleIds.includes(role))
+}
+
+// 退出登录
+const logout = () => {
+  // todo
+  router.replace('/login')
+}
+// 副作用区域-end
+
 const route = useRoute()
 const router = useRouter()
 
-// 菜单
-const menu = computed(() => {
-  const list = routes?.[0]?.children || []
-  return recursionMenu(list)
-})
+// 过滤菜单
+const filterMenu = (list: RouteRecordRaw[]): RouteRecordRaw[] => {
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    // 若有meta.roles角色数组则判断是否有权限,反之说明该项无需任何权限,直接返回
+    if (Array.isArray(item.meta?.roles) && item.meta?.roles.length > 0) {
+      // 判断是否有权限
+      const hasRole = item.meta?.roles.some((role) =>
+        userinfo.value.roleIds.includes(role as string)
+      )
+      // 若无权限则删除该项,反之判断是否有子菜单,若有则继续过滤子项菜单
+      if (!hasRole) {
+        list.splice(i, 1)
+        i--
+      } else if (item.children && item.children.length > 0) {
+        item.children = filterMenu(item.children)
+        // 若子菜单过滤后为空,则删除该项
+        if (item.children.length === 0) {
+          list.splice(i, 1)
+          i--
+        }
+      }
+    }
+  }
+  return list
+}
 
 // 递归菜单
 const recursionMenu = (list: RouteRecordRaw[]): Menu[] => {
@@ -24,6 +62,17 @@ const recursionMenu = (list: RouteRecordRaw[]): Menu[] => {
     children: item.children ? recursionMenu(item?.children || []) : undefined
   }))
 }
+
+// 菜单
+const menu = ref<Menu[]>([])
+// 路由表
+const menuList = routes?.[0]?.children || []
+// 过滤没有权限的路由表
+const filterList = filterMenu(menuList)
+// 返回包装好的Menu
+menu.value = recursionMenu(filterList)
+// 重定向到第一个有权限的路由
+router.replace(filterList[0]?.redirect as string)
 
 // 当前打开的菜单项
 const menuOpenKeys = ref<string[]>([])
@@ -97,11 +146,6 @@ const goPath = (info: Menu) => {
   const pathArr = menuOpenKeys.value.slice(0, currentIndex + 1)
   router.replace(`/${pathArr.join('/')}`)
 }
-
-// 退出登录
-const logout = () => {
-  router.replace('/login')
-}
 </script>
 
 <template>
@@ -150,7 +194,7 @@ const logout = () => {
             </a-breadcrumb-item>
           </a-breadcrumb>
           <a-layout class="layout-content-main">
-            <router-view />
+            <router-view v-if="isPermission(route.meta.roles as string[])" />
           </a-layout>
         </a-layout-content>
       </a-layout>
