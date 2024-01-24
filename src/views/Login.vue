@@ -5,7 +5,7 @@ import { routes } from '@/router'
 // 路由参数
 const params = queryToObj(window.location.search)
 // 重定向地址
-const redirectPath = params.redirect || '/'
+const redirectPath = params.redirect ? decodeURIComponent(params.redirect) : '/'
 
 // 跳转
 const skip = () => {
