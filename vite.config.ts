@@ -38,7 +38,7 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     server: {
-      port: 6666,
+      port: 399,
       proxy: {
         // 代理接口
         [env.VITE_APP_API_URL_PREFIX]: {
