@@ -20,7 +20,8 @@ export const routes: RouteRecordRaw[] = [
       redirect: '/route1/route10',
       meta: {
         title: 'route1',
-        icon: PieChartOutlined
+        icon: PieChartOutlined,
+        roles: ['admin']
       },
       children: [{
         path: 'route10',
@@ -36,7 +37,8 @@ export const routes: RouteRecordRaw[] = [
       component: () => import('@/views/Example.vue'),
       meta: {
         title: 'route2',
-        icon: DesktopOutlined
+        icon: DesktopOutlined,
+        roles: ['admin']
       }
     }, {
       path: 'route3',
@@ -44,7 +46,8 @@ export const routes: RouteRecordRaw[] = [
       redirect: '/route3/route30',
       meta: {
         title: 'route3',
-        icon: MailOutlined
+        icon: MailOutlined,
+        roles: ['admin']
       },
       children: [{
         path: 'route30',
