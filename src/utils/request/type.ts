@@ -28,7 +28,7 @@ export interface RequestData<T = any> extends RequestConfig {
 // 返回体
 export interface ResponseData<T = any> {
   [index: number]: number
-  code?: number
+  code?: number | string
   data?: T
   code_dec?: string
   name?: string

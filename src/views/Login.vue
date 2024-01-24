@@ -7,8 +7,8 @@ const params = queryToObj(window.location.search)
 // 重定向地址
 const redirectPath = params.redirect || '/'
 
-// 登录
-const login = () => {
+// 跳转
+const skip = () => {
   window.location.replace(redirectPath)
 }
 
@@ -50,7 +50,7 @@ const login = () => {
   <div class="login flex-col-center">
     <div class="title">{{ routes?.[0]?.meta?.title || '管理后台' }}</div>
     <div class="qr flex-row-center" id="qr_login">
-      <a-button @click="login">登录</a-button>
+      <a-button @click="skip">登录</a-button>
     </div>
   </div>
 </template>
