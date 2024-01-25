@@ -38,7 +38,7 @@ export const routes: RouteRecordRaw[] = [
       meta: {
         title: 'route2',
         icon: DesktopOutlined,
-        roles: ['admin']
+        roles: ['admin1']
       }
     }, {
       path: 'route3',

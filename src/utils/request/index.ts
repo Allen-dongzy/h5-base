@@ -69,11 +69,12 @@ Server.interceptors.response.use(
     const data = res.data as ResponseData
     if (data instanceof Blob) return Promise.resolve(data)
     if (!Object.prototype.hasOwnProperty.call(data, 'code')) return Promise.resolve(data)
-    if (data.code !== 200) {
-      if ([401].includes(data.code as number)) {
+    if (data.code !== '200') {
+      if (['700'].includes(data.code as string)) {
+        message.error('登录验证失败,请重新登录')
         goLogin()
       } else if (!(res.config as RequestData).errNoTip) {
-        message.error(data.code_dec || '请求失败')
+        message.error(data.message || '请求失败')
       }
       return Promise.reject(data)
     }

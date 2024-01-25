@@ -1,19 +1,14 @@
 <script setup lang="ts" name="layout">
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import FunctionBar from '@/layout/components/FunctionBar.vue'
-import type { RouteRecordRaw } from 'vue-router'
 import { routes } from '@/router'
 import type { Menu, MenuEvent } from '@/types/view/Layout'
+import useRouterPermission from '@/composables/useRouterPermission'
 
 // 副作用区域-start
 const userinfo = ref({
   roleIds: ['admin']
 })
-
-// 是否有权限
-const isPermission = (roles: string[]) => {
-  return roles.some((role) => userinfo.value.roleIds.includes(role))
-}
 
 // 退出登录
 const logout = () => {
@@ -25,54 +20,23 @@ const logout = () => {
 const route = useRoute()
 const router = useRouter()
 
-// 过滤菜单
-const filterMenu = (list: RouteRecordRaw[]): RouteRecordRaw[] => {
-  for (let i = 0; i < list.length; i++) {
-    const item = list[i]
-    // 若有meta.roles角色数组则判断是否有权限,反之说明该项无需任何权限,直接返回
-    if (Array.isArray(item.meta?.roles) && item.meta?.roles.length > 0) {
-      // 判断是否有权限
-      const hasRole = item.meta?.roles.some((role) =>
-        userinfo.value.roleIds.includes(role as string)
-      )
-      // 若无权限则删除该项,反之判断是否有子菜单,若有则继续过滤子项菜单
-      if (!hasRole) {
-        list.splice(i, 1)
-        i--
-      } else if (item.children && item.children.length > 0) {
-        item.children = filterMenu(item.children)
-        // 若子菜单过滤后为空,则删除该项
-        if (item.children.length === 0) {
-          list.splice(i, 1)
-          i--
-        }
-      }
-    }
-  }
-  return list
-}
-
-// 递归菜单
-const recursionMenu = (list: RouteRecordRaw[]): Menu[] => {
-  return list.map((item) => ({
-    key: item?.path as string,
-    icon: item.meta?.icon ? () => h(item.meta?.icon || '') : undefined,
-    label: item.meta?.title as string,
-    title: item.meta?.title as string,
-    children: item.children ? recursionMenu(item?.children || []) : undefined
-  }))
-}
+// 过滤没有权限的路由列表, 生成菜单, 当前路由是否有权限, 找到第一个有权限的路由
+const { filterNoPermissionRouteList, generateMenu, isPermission, findFirstPermissionPath } =
+  useRouterPermission(userinfo.value.roleIds)
 
 // 菜单
 const menu = ref<Menu[]>([])
 // 路由表
-const menuList = routes?.[0]?.children || []
-// 过滤没有权限的路由表
-const filterList = filterMenu(menuList)
-// 返回包装好的Menu
-menu.value = recursionMenu(filterList)
-// 重定向到第一个有权限的路由
-router.replace(filterList[0]?.redirect as string)
+const list = routes?.[0]?.children || []
+// 过滤没有权限的路由列表
+const filterList = filterNoPermissionRouteList(list)
+// 生成菜单
+menu.value = generateMenu(filterList)
+// 若当前路由无权限则重定向到第一个有权限的路由
+if (!isPermission(route.meta.roles as string[])) {
+  const path = findFirstPermissionPath(filterList)
+  router.replace(path)
+}
 
 // 当前打开的菜单项
 const menuOpenKeys = ref<string[]>([])
@@ -333,3 +297,4 @@ const goPath = (info: Menu) => {
   }
 }
 </style>
+@/composables/useRouterPermission
