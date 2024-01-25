@@ -26,10 +26,11 @@ export interface RequestData<T = any> extends RequestConfig {
 }
 
 // 返回体
-export interface ResponseData<T = any> {
-  [index: number]: number
+export interface ResponseData<T = any> extends Record<string, any> {
   code?: number | string
+  message: string
+  messageEN: string
   data?: T
-  code_dec?: string
-  name?: string
+  traceId: string
+  success: boolean
 }
