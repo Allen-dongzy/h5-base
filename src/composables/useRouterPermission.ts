@@ -1,23 +1,16 @@
 import { ref } from 'vue'
-import type { VNode } from 'vue'
-import type { Menu } from 'ant-design-vue'
 import type { RouteRecordRaw } from 'vue-router'
-
-// 菜单类型
-export interface Menu {
-  key: string
-  icon?: () => VNode
-  label: string
-  title: string
-  children?: Menu[]
-}
+import { routes } from '@/router'
 
 export default (roleIds: string[]) => {
 
-  // 权限列表
+  // 角色列表
   const roles = ref<string[]>(roleIds || [])
-
-  // 过滤没有权限的路由列表
+  // 路由列表
+  const routers = ref<any>(routes?.[0]?.children || [])
+  // 有权限的路由列表
+  const permissionRouters = ref<any>([])
+  // 过滤出有权限的路由列表
   const filterNoPermissionRouteList = (list: RouteRecordRaw[]): RouteRecordRaw[] => {
     for (let i = 0; i < list.length; i++) {
       const item = list[i]
@@ -43,23 +36,13 @@ export default (roleIds: string[]) => {
     }
     return list
   }
+  permissionRouters.value = filterNoPermissionRouteList(routers.value)
 
-  // 生成菜单
-  const generateMenu = (list: RouteRecordRaw[]): Menu[] => {
-    return list.map((item) => ({
-      key: item?.path as string,
-      icon: item.meta?.icon ? () => h(item.meta?.icon || '') : undefined,
-      label: item.meta?.title as string,
-      title: item.meta?.title as string,
-      children: item.children ? generateMenu(item?.children || []) : undefined
-    }))
-  }
 
   // 当前路由是否有权限
   const isPermission = (currentRouteRoles: string[]) => {
     return currentRouteRoles.some((item) => roles.value.includes(item))
   }
-
   // 找到第一个有权限的路径
   const findFirstPermissionPath = (list: RouteRecordRaw[], pathArr: string[] = []): string => {
     const currentItem = list[0]
@@ -70,5 +53,5 @@ export default (roleIds: string[]) => {
     return `/${pathArr.join('/')}`
   }
 
-  return { filterNoPermissionRouteList, generateMenu, isPermission, findFirstPermissionPath }
+  return { routers, permissionRouters, filterNoPermissionRouteList, isPermission, findFirstPermissionPath }
 }

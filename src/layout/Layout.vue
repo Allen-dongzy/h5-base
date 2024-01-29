@@ -2,8 +2,8 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import FunctionBar from '@/layout/components/FunctionBar.vue'
 import { routes } from '@/router'
-import type { Menu, MenuEvent } from '@/types/view/Layout'
 import useRouterPermission from '@/composables/useRouterPermission'
+import useMenu from '@/composables/useMenu'
 
 // 副作用区域-start
 const userinfo = ref({
@@ -20,79 +20,6 @@ const logout = () => {
 const route = useRoute()
 const router = useRouter()
 
-// 过滤没有权限的路由列表, 生成菜单, 当前路由是否有权限, 找到第一个有权限的路由
-const { filterNoPermissionRouteList, generateMenu, isPermission, findFirstPermissionPath } =
-  useRouterPermission(userinfo.value.roleIds)
-
-// 菜单
-const menu = ref<Menu[]>([])
-// 路由表
-const list = routes?.[0]?.children || []
-// 过滤没有权限的路由列表
-const filterList = filterNoPermissionRouteList(list)
-// 生成菜单
-menu.value = generateMenu(filterList)
-// 若当前路由无权限则重定向到第一个有权限的路由
-if (!isPermission(route.meta.roles as string[])) {
-  const path = findFirstPermissionPath(filterList)
-  router.replace(path)
-}
-
-// 当前打开的菜单项
-const menuOpenKeys = ref<string[]>([])
-// 当前选择的菜单项
-const menuSelectedKeys = ref<string[]>([])
-// 面包屑
-const breadcrumb = ref<Menu[]>([])
-
-// 菜单点击事件
-const menuClick = ({ key, keyPath }: MenuEvent) => {
-  menuSelectedKeys.value = [key || '']
-  menuOpenKeys.value = keyPath || []
-  breadcrumb.value = getBreadcrumb(menu.value, keyPath)
-  router.replace(`/${keyPath.join('/')}`)
-}
-// 获取面包屑
-const getBreadcrumb = (list: Menu[], keyPath: string[]): Menu[] => {
-  const breadcrumb = []
-  const current = list.find((item) => item.key === keyPath[0])
-  if (current) {
-    breadcrumb.push(current)
-  }
-  if (current?.children) {
-    breadcrumb.push(...getBreadcrumb(current.children, keyPath.slice(1)))
-  }
-  return breadcrumb
-}
-
-// 初始化选择项
-const initSelectKeys = (list: Menu[]) => {
-  menuOpenKeys.value.push(list[0]?.key || '')
-  if (list[0]?.children) {
-    initSelectKeys(list[0].children)
-  } else {
-    menuSelectedKeys.value = [list[0]?.key || '']
-  }
-  return
-}
-// 监听菜单变化或路由变化,初始化菜单项
-watch(
-  () => [menu.value, route.fullPath],
-  () => {
-    if (!menu.value || menu.value.length === 0) return
-    // 若有路由,则从路由设置菜单项,反之初始化菜单项
-    if (route.fullPath && route.fullPath !== '/') {
-      const path = route.fullPath.split('/').slice(1)
-      menuOpenKeys.value = path
-      menuSelectedKeys.value = [path[path.length - 1]]
-    } else {
-      initSelectKeys(menu.value)
-    }
-    breadcrumb.value = getBreadcrumb(menu.value, menuOpenKeys.value)
-  },
-  { immediate: true }
-)
-
 // 侧边栏收缩
 const siderCollapsed = ref(false)
 const toggleSiderCollapsed = () => {
@@ -104,24 +31,21 @@ const goHome = () => {
   router.replace('/')
 }
 
-// 前往指定路径
-const goPath = (menu: Menu[], index: number) => {
-  if (index === 0) {
-    router.replace(findFirstPermissionMenu(menu))
-  } else {
-    router.replace(`/${menu.map((item) => item.key).join('/')}`)
-  }
+// 有权限的路由列表,  当前路由是否有权限, 找到第一个有权限的路由
+const { permissionRouters, isPermission, findFirstPermissionPath } = useRouterPermission(
+  userinfo.value.roleIds
+)
+
+// 若当前路由无权限则重定向到第一个有权限的路由
+if (!isPermission(route.meta.roles as string[])) {
+  const path = findFirstPermissionPath(permissionRouters.value)
+  router.replace(path)
 }
 
-// 找到第一个有权限的菜单
-const findFirstPermissionMenu = (info: Menu[], pathArr: string[] = []): string => {
-  const currentItem = info[0]
-  pathArr.push(currentItem.key)
-  if (currentItem?.children) {
-    findFirstPermissionMenu(currentItem.children, pathArr)
-  }
-  return `/${pathArr.join('/')}`
-}
+// 菜单, 当前打开的菜单项, 当前选择的菜单项, 菜单点击事件, 面包屑, 面包屑跳转
+const { menu, menuOpenKeys, menuSelectedKeys, menuClick, breadcrumb, breadcrumbSkip } = useMenu(
+  permissionRouters.value
+)
 </script>
 
 <template>
@@ -164,7 +88,7 @@ const findFirstPermissionMenu = (info: Menu[], pathArr: string[] = []): string =
               class="layout-breadcrumb-item"
               v-for="(item, index) in breadcrumb"
               :key="item.key"
-              @click="goPath(breadcrumb, index)"
+              @click="breadcrumbSkip(breadcrumb, index)"
             >
               {{ item.title }}
             </a-breadcrumb-item>
