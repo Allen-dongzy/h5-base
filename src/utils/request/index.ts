@@ -90,7 +90,7 @@ const goLogin = debounce(() => {
   setToken()
   setUserinfo()
   // 跳转到登陆页
-  window.location.replace(`/login?redirect=${encodeURIComponent(window.location.href)}`)
+  window.location.replace(`${import.meta.env.BASE_URL}/login?redirect=${encodeURIComponent(window.location.href)}`)
 })
 
 // 参数转换

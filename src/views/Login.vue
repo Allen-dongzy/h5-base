@@ -1,48 +1,66 @@
 <script setup lang="ts" name="login">
-import { queryToObj } from '@/utils/tools'
 import { routes } from '@/router'
 
-// 路由参数
-const params = queryToObj(window.location.search)
+// 路由
+const route = useRouter()
+const currentRoute = route.currentRoute.value
+
 // 重定向地址
-const redirectPath = params.redirect ? decodeURIComponent(params.redirect) : '/'
+const { redirect } = currentRoute.query
 
 // 跳转
 const skip = () => {
-  window.location.replace(redirectPath)
+  window.location.replace((redirect as string) || import.meta.env.BASE_URL)
 }
 
-// // 请求企业二维码登录配置
-// const requestQrInit = async () => {
-//   const [err, res] = await qrInit()
+// // 获取agent企业微信配置
+// const entryFirstApi = async () => {
+//   const [err, res] = await entryFirst()
 //   if (err) return
 //   return res.data
 // }
-
 // // 请求登录网页授权登陆链接
 // const requestWechatAuthEntry = async (config: any) => {
-//   const data = {
-//     redirect: `${config.baseUrl}admin/index.html`,
-//     state: Math.round(new Date().valueOf() * Math.random()).toString()
-//   }
-//   const [err, res] = await wechatAuthEntry(data)
-//   if (err) return
-//   const info = queryToObj(res.data.split('?')[1])
 //   new (window as any).WwLogin({
 //     id: 'qr_login',
-//     appid: info.appid,
+//     appid: config.corpId,
 //     agentid: config.agentId,
-//     redirect_uri: redirectPath as string,
-//     state: info.state,
+//     redirect_uri: `${config.baseUrl}${import.meta.env.VITE_APP_SERVER_URL_PREFIX}/login`,
+//     state: Math.round(new Date().valueOf() * Math.random()).toString(),
 //     href: '',
 //     lang: 'zh'
 //   })
 // }
 
-// // js-sdk初始化
-// onMounted(async () => {
-//   const config = await requestQrInit()
+// // 扫码登录管理
+// const scanManager = async () => {
+//   const config = await entryFirstApi()
 //   requestWechatAuthEntry(config)
+//   if (code) {
+//     const res = await qrLoginApi(code as string)
+//     if (!res) return
+//     skip()
+//   }
+// }
+
+// // debug登录管理
+// const debugManager = async () => {
+//   if (!userId) return
+//   const res = await loginDebugApi(userId as string)
+//   if (!res) return
+//   skip()
+// }
+
+// onMounted(async () => {
+//   // [本地/远程dev]开发环境下,debug登录
+//   if (
+//     import.meta.env.MODE === 'development' ||
+//     import.meta.env.VITE_APP_HOST === 'https://dior-message-archiving-dev.yimlinkapp.com'
+//   ) {
+//     debugManager()
+//   }
+//   // 扫码登录
+//   scanManager()
 // })
 </script>
 
