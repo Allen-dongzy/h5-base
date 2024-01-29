@@ -105,10 +105,22 @@ const goHome = () => {
 }
 
 // 前往指定路径
-const goPath = (info: Menu) => {
-  const currentIndex = menuOpenKeys.value.findIndex((item) => item === info.key)
-  const pathArr = menuOpenKeys.value.slice(0, currentIndex + 1)
-  router.replace(`/${pathArr.join('/')}`)
+const goPath = (menu: Menu[], index: number) => {
+  if (index === 0) {
+    router.replace(findFirstPermissionMenu(menu))
+  } else {
+    router.replace(`/${menu.map((item) => item.key).join('/')}`)
+  }
+}
+
+// 找到第一个有权限的菜单
+const findFirstPermissionMenu = (info: Menu[], pathArr: string[] = []): string => {
+  const currentItem = info[0]
+  pathArr.push(currentItem.key)
+  if (currentItem?.children) {
+    findFirstPermissionMenu(currentItem.children, pathArr)
+  }
+  return `/${pathArr.join('/')}`
 }
 </script>
 
@@ -150,9 +162,9 @@ const goPath = (info: Menu) => {
           <a-breadcrumb class="layout-breadcrumb sel-hide">
             <a-breadcrumb-item
               class="layout-breadcrumb-item"
-              v-for="item in breadcrumb"
+              v-for="(item, index) in breadcrumb"
               :key="item.key"
-              @click="goPath(item)"
+              @click="goPath(breadcrumb, index)"
             >
               {{ item.title }}
             </a-breadcrumb-item>
@@ -183,13 +195,9 @@ const goPath = (info: Menu) => {
         cursor: pointer;
       }
     }
-    // 菜单展开项背景色
-    :deep(.ant-menu-submenu.ant-menu-submenu-inline.ant-menu-submenu-open) {
-      background-color: #f5f4f2;
-    }
     // 菜单展开项hover状态的背景色
     :deep(.ant-menu-submenu-title:hover) {
-      background-color: #f5f4f2;
+      background-color: #fff;
     }
     // 菜单展开项里子菜单的背景色
     :deep(.ant-menu.ant-menu-sub.ant-menu-inline) {
@@ -197,7 +205,7 @@ const goPath = (info: Menu) => {
     }
     // 菜单项被选择后的背景色
     :deep(.ant-menu-item-selected) {
-      background-color: transparent !important;
+      background-color: #f5f4f2 !important;
     }
     // 菜单项hover状态的背景色
     :deep(.ant-menu-item.ant-menu-item-active:hover) {
