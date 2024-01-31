@@ -20,17 +20,6 @@ const logout = () => {
 const route = useRoute()
 const router = useRouter()
 
-// 侧边栏收缩
-const siderCollapsed = ref(false)
-const toggleSiderCollapsed = () => {
-  siderCollapsed.value = !siderCollapsed.value
-}
-
-// 前往首页
-const goHome = () => {
-  router.replace('/')
-}
-
 // 有权限的路由列表,  当前路由是否有权限, 找到第一个有权限的路由
 const { permissionRouters, isPermission, findFirstPermissionPath } = useRouterPermission(
   userinfo.value.roleIds
@@ -46,6 +35,18 @@ if (!isPermission(route.meta.roles as string[])) {
 const { menu, menuOpenKeys, menuSelectedKeys, menuClick, breadcrumb, breadcrumbSkip } = useMenu(
   permissionRouters.value
 )
+
+// 侧边栏收缩
+const siderCollapsed = ref(false)
+const toggleSiderCollapsed = () => {
+  siderCollapsed.value = !siderCollapsed.value
+}
+
+// 前往首页
+const goHome = () => {
+  const path = findFirstPermissionPath(permissionRouters.value)
+  router.replace(path)
+}
 </script>
 
 <template>
