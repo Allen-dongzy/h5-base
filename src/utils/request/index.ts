@@ -2,11 +2,10 @@ import type { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { objRemoveEmpty, objKeySort, objToQuery, debounce } from '@/utils/tools'
-import type { RequestData, ResponseData, ContentType } from './type'
 import useUserStore from '@/stores/useUserStore'
 
 // 获取请求头ContentType
-const contentType: Record<string, ContentType> = {
+const contentType: Record<string, Request.ContentType> = {
   'get': 'application/x-www-form-urlencoded',
   'post': 'application/json'
 }
@@ -65,15 +64,15 @@ Server.interceptors.request.use(
 // 响应拦截器
 Server.interceptors.response.use(
   // 拦截到响应对象，将响应对象的 data 属性返回给调用的地方
-  (res: AxiosResponse<ResponseData>) => {
-    const data = res.data as ResponseData
+  (res: AxiosResponse<Request.ResponseData>) => {
+    const data = res.data as Request.ResponseData
     if (data instanceof Blob) return Promise.resolve(data)
     if (!Object.prototype.hasOwnProperty.call(data, 'code')) return Promise.resolve(data)
     if (data.code !== '200') {
       if (['700'].includes(data.code as string)) {
         message.error('登录验证失败,请重新登录')
         goLogin()
-      } else if (!(res.config as RequestData).errNoTip) {
+      } else if (!(res.config as Request.RequestData).errNoTip) {
         message.error(data.message || '请求失败')
       }
       return Promise.reject(data)
@@ -95,7 +94,7 @@ const goLogin = debounce(() => {
 })
 
 // 参数转换
-const transRequestData = (requestData: RequestData) => {
+const transRequestData = (requestData: Request.RequestData) => {
   requestData.headers = requestData.headers || {}
   if (requestData.contentType) {
     requestData.headers['Content-Type'] = requestData.contentType
@@ -110,7 +109,7 @@ const transRequestData = (requestData: RequestData) => {
 }
 
 // 请求request
-const request = async (requestData: RequestData) => {
+const request = async (requestData: Request.RequestData) => {
   // 参数转换
   transRequestData(requestData)
   // Promise的then和catch处理包装
