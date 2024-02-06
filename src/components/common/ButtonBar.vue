@@ -2,7 +2,7 @@
 import type { Buttons } from '@/types/components/ButtonBar.ts'
 
 interface Props {
-  size: number // 间距
+  size?: number // 间距
   buttons: Buttons
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -11,8 +11,8 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div class="button-bar" :style="{ paddingBottom: props.size + 'px' }">
-    <a-space :size="props.size" wrap>
+  <div class="button-bar">
+    <div class="flex-row flex-wrap" :style="{ 'gap': `${props.size}px` }">
       <a-button
         :type="item?.type"
         :size="item?.size"
@@ -25,12 +25,11 @@ const props = withDefaults(defineProps<Props>(), {
       >
         {{ item.text }}
       </a-button>
-    </a-space>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .button-bar {
-  padding: 20px 0;
 }
 </style>

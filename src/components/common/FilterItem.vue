@@ -69,6 +69,8 @@ const query = computed({
         v-model:value="query[props.info?.key as string]"
         :placeholder="props.info?.placeholder"
         allow-clear
+        :disabled-date="props.info?.disabledDate"
+        @calendar-change="props.info?.calendarChange"
         @change="props.info?.change"
       />
     </div>

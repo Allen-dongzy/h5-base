@@ -1,6 +1,7 @@
 <script setup lang="ts" name="example">
 import FilterBar from '@/components/common/FilterBar.vue'
 import ButtonBar from '@/components/common/ButtonBar.vue'
+import FilterArea from '@/components/common/FilterArea.vue'
 import type { Buttons } from '@/types/components/ButtonBar'
 import type { Filters } from '@/types/components/FilterBar'
 import { PieChartOutlined } from '@ant-design/icons-vue'
@@ -21,7 +22,6 @@ const query = reactive({
 // 筛选
 const filters = reactive<Filters>({
   time: {
-    label: '时间范围',
     component: 'range-picker',
     placeholder: ['开始时间', '结束时间'],
     change: (value: string) => {
@@ -29,7 +29,6 @@ const filters = reactive<Filters>({
     }
   },
   price: {
-    label: '价格',
     component: 'input',
     placeholder: '请输入价格',
     prefix: h(PieChartOutlined),
@@ -130,17 +129,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="example">
+  <div class="example flex-col-start">
     <div class="text">example: {{ path }}</div>
-    <FilterBar v-model:query="query" :filters="filters" />
-    <ButtonBar :buttons="buttons" />
+
+    <div>
+      <div class="text">合并筛选:</div>
+      <FilterArea v-model:query="query" :filters="filters" :buttons="buttons" />
+    </div>
+
+    <div>
+      <div class="text">分开筛选:</div>
+      <div class="filter-area flex-col-start">
+        <FilterBar v-model:query="query" :filters="filters" />
+        <ButtonBar :buttons="buttons" />
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .example {
+  gap: 40px;
   .text {
-    margin-bottom: 20px;
+    margin: 20px 0;
+  }
+  .filter-area {
+    gap: 10px;
   }
 }
 </style>

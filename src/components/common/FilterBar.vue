@@ -8,7 +8,7 @@ interface Props {
   filters: Filters
 }
 const props = withDefaults(defineProps<Props>(), {
-  size: 20
+  size: 10
 })
 const emit = defineEmits(['update:query'])
 
@@ -38,10 +38,10 @@ const infos = computed(() => {
 </script>
 
 <template>
-  <div class="filter-bar" :style="{ paddingBottom: size + 'px' }">
-    <a-space :size="size" wrap>
+  <div class="filter-bar">
+    <div class="flex-row flex-wrap" :style="{ 'gap': `${props.size}px` }">
       <FilterItem v-for="item in infos" v-model:query="query" :info="item" :key="item.key" />
-    </a-space>
+    </div>
   </div>
 </template>
 

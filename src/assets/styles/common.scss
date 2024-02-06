@@ -26,15 +26,15 @@
   flex: 1;
 }
 
-.f-wrap {
+.flex-wrap {
   flex-wrap: wrap;
 }
 
-.f-col {
+.flex-col {
   flex-direction: column;
 }
 
-.f-shrink {
+.flex-shrink {
   flex-shrink: 0;
 }
 
@@ -109,10 +109,9 @@
   align-items: center;
 }
 
-.flex-col {
+.flex-col-start {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .flex-col-center {
