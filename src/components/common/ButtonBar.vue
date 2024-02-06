@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <div class="button-bar">
-    <div class="flex-row flex-wrap" :style="{ 'gap': `${props.size}px` }">
+    <div class="flex ai-start flex-wrap" :style="{ gap: `${props.size}px` }">
       <a-button
         :type="item?.type"
         :size="item?.size"

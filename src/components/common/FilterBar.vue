@@ -39,7 +39,7 @@ const infos = computed(() => {
 
 <template>
   <div class="filter-bar">
-    <div class="flex-row flex-wrap" :style="{ 'gap': `${props.size}px` }">
+    <div class="flex ai-start flex-wrap" :style="{ gap: `${props.size}px` }">
       <FilterItem v-for="item in infos" v-model:query="query" :info="item" :key="item.key" />
     </div>
   </div>
