@@ -1,5 +1,5 @@
 import storage from '@/utils/storage'
-import { getuserinfo } from '@/apis/users'
+import { qrLogin, debugLogin, getuserinfo } from '@/apis/users'
 import type { Userinfo } from '@/types/interface/users'
 
 
@@ -23,10 +23,29 @@ const useUserStore = defineStore('useUserStore', () => {
     userinfo.value = currentUserinfo || {}
   }
   // 获取用户信息
-  const getuserinfoApi = async () => {
+  const userinfoApi = async () => {
     const [err, res] = await getuserinfo()
     if (err) return
     setUserinfo(res.info)
+  }
+
+  // DEBUG登录
+  const debugLoginApi = async (userId: string) => {
+    const [err, res] = await debugLogin(userId)
+    if (err) return false
+    setToken(res.data)
+    await userinfoApi()
+    return true
+  }
+
+  // 扫码登录
+  const qrLoginApi = async (code: string) => {
+    const data = { code }
+    const [err, res] = await qrLogin(data)
+    if (err) return false
+    setToken(res.data)
+    await userinfoApi()
+    return true
   }
 
   return {
@@ -34,7 +53,9 @@ const useUserStore = defineStore('useUserStore', () => {
     setToken,
     userinfo,
     setUserinfo,
-    getuserinfoApi
+    userinfoApi,
+    debugLoginApi,
+    qrLoginApi
   }
 })
 
