@@ -30,7 +30,7 @@ const query = computed({
 
 <template>
   <div class="filter-area flex jc-sb">
-    <FilterBar v-model:query="query" :filters="props.filters" />
+    <FilterBar v-model:query="query" :filters="props.filters" :size="props?.size" />
     <div class="flex jc-end flex-shrink" v-if="props.buttons">
       <ButtonBar :buttons="props.buttons" />
     </div>

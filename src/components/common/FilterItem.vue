@@ -32,15 +32,44 @@ const query = computed({
         allow-clear
         @change="props.info?.change"
       >
-        <template #prefix>
+        <template #prefix v-if="props.info?.prefix">
           <span v-if="typeof props.info?.prefix === 'string'">{{ props.info?.prefix }}</span>
           <component v-else :is="props.info?.prefix"></component>
         </template>
-        <template #suffix>
+        <template #suffix v-if="props.info?.suffix">
           <span v-if="typeof props.info?.suffix === 'string'">{{ props.info?.suffix }}</span>
           <component v-else :is="props.info?.suffix"></component>
         </template>
       </a-input>
+
+      <!-- 数字输入框 -->
+      <a-input-number
+        v-if="props.info.component === 'input-number'"
+        :style="{ width: props.info?.width ? `${props.info?.width}px` : 'auto' }"
+        v-model:value="query[props.info?.key as string]"
+        @change="props.info?.change"
+      >
+        <template #prefix v-if="props.info?.prefix">
+          <span v-if="typeof props.info?.prefix === 'string'">{{ props.info?.prefix }}</span>
+          <component v-else :is="props.info?.prefix"></component>
+        </template>
+        <template #suffix v-if="props.info?.suffix">
+          <span v-if="typeof props.info?.suffix === 'string'">{{ props.info?.suffix }}</span>
+          <component v-else :is="props.info?.suffix"></component>
+        </template>
+        <template #addonBefore v-if="props.info?.addonBefore">
+          <span v-if="typeof props.info?.addonBefore === 'string'" class="addon">{{
+            props.info?.addonBefore
+          }}</span>
+          <component v-else :is="props.info?.addonBefore"></component>
+        </template>
+        <template #addonAfter v-if="props.info?.addonAfter">
+          <span v-if="typeof props.info?.addonAfter === 'string'" class="addon">{{
+            props.info?.addonAfter
+          }}</span>
+          <component v-else :is="props.info?.addonAfter"></component>
+        </template>
+      </a-input-number>
 
       <!-- 下拉选择框 -->
       <a-select
@@ -79,5 +108,9 @@ const query = computed({
 
 <style scoped lang="scss">
 .filter-item {
+  .addon {
+    font-size: 12px;
+    color: #999999;
+  }
 }
 </style>
