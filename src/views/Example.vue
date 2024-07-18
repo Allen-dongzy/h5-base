@@ -57,6 +57,11 @@ const filters = reactive<Filters>({
     change: (value: string) => {
       console.log('store', value)
     }
+  },
+  date: {
+    component: 'input-number',
+    label: '查询天数',
+    addonAfter: '天'
   }
 })
 
