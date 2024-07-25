@@ -333,9 +333,9 @@ const queryToObj = (query: string): Record<string, any> => {
  * @param {string} type 文件名
  * @returns query参数
  */
-const downloadFile = (res: any, type = 'xlsx') => {
+const downloadFile = (res: any, name: string = '', type = 'xlsx') => {
   // 文件名
-  let fileName = decodeURI(res.headers?.['content-disposition'].split('=')[1])
+  let fileName = res.headers?.['content-disposition']?.split('=')?.[1] ? decodeURI(res.headers['content-disposition'].split('=')[1]) : name
   // 特殊处理名称所包含的特殊字符
   fileName = fileName.indexOf('\'\'') > -1 ? fileName.split('\'\'')[1] : fileName
   // 不是Excel取名方式需要变更
