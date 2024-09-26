@@ -5,8 +5,7 @@
     "src/**/*.vue",
     "src/**/*.ts",
     "src/**/*.d.ts",
-    "./presets/env/d.ts/env.d.ts",
-    "./presets/auto-import/d.ts/auto-import.d.ts"
+    "presets/**/*.d.ts"
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
