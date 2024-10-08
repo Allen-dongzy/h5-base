@@ -5,3 +5,25 @@
 .ant-menu-item-selected.ant-menu-item-only-child {
   background: #f5f4f2 !important;
 }
+
+.layout-content-main {
+  height: calc(100% - 62px - 30px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #ffffff;
+  margin: 0 30px;
+  box-sizing: border-box;
+  &.content-padding {
+    padding: 30px 30px 0;
+  }
+  &::-webkit-scrollbar {
+    width: 4px;
+    background: #f7f7f7;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e1e1e1;
+    border-radius: 10px;
+    box-shadow: 0 0 3px #999;
+  }
+}

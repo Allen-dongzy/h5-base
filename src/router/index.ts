@@ -62,7 +62,8 @@ export const routes: RouteRecordRaw[] = [
         name: 'route31',
         component: () => import('@/views/Example.vue'),
         meta: {
-          title: 'route31'
+          title: 'route31',
+          noLayoutContent: true // 不加载layout-content类
         }
       }]
     }, {
