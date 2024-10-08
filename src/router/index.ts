@@ -2,7 +2,8 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import {
   PieChartOutlined,
   DesktopOutlined,
-  MailOutlined
+  MailOutlined,
+  BarChartOutlined
 } from '@ant-design/icons-vue'
 
 export const routes: RouteRecordRaw[] = [
@@ -38,7 +39,7 @@ export const routes: RouteRecordRaw[] = [
       meta: {
         title: 'route2',
         icon: DesktopOutlined,
-        roles: ['admin1']
+        roles: ['admin1'] // 权限不足-隐藏菜单
       }
     }, {
       path: 'route3',
@@ -64,6 +65,16 @@ export const routes: RouteRecordRaw[] = [
           title: 'route31'
         }
       }]
+    }, {
+      path: 'route4',
+      name: 'route4',
+      component: () => import('@/views/Example.vue'),
+      meta: {
+        title: 'route4',
+        icon: BarChartOutlined,
+        roles: ['admin'],
+        hide: true // 隐藏菜单
+      }
     }]
   },
   {

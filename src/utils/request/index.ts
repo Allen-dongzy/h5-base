@@ -4,10 +4,11 @@ import { message } from 'ant-design-vue'
 import { objRemoveEmpty, objKeySort, objToQuery, debounce } from '@/utils/tools'
 import useUserStore from '@/stores/useUserStore'
 
-// 获取请求头ContentType
-const contentType: Record<string, Request.ContentType> = {
-  'get': 'application/x-www-form-urlencoded',
-  'post': 'application/json'
+// ContentType类型
+enum ContentType {
+  formUrlencoded = 'application/x-www-form-urlencoded',
+  formData = 'multipart/form-data',
+  json = 'application/json'
 }
 
 // 创建对象
@@ -30,8 +31,8 @@ const setHeader = (config: AxiosRequestConfig) => {
 
 // 设置url
 const setUrl = (config: AxiosRequestConfig) => {
-  if (config.headers!['Content-Type'] === contentType.get) {
-    // 若请求头是表单,就将data参数query化并添加到url(某些接口会有post请求但是请求头又是表单的极端情况)
+  if (config.headers!['Content-Type'] === ContentType.formUrlencoded) {
+    // 若请求头是formUrlencoded,就将data参数query化并添加到url(某些接口会有post请求但是请求头又是表单的极端情况)
     config.url += `${objToQuery(config.data)}`
   } else {
     // 普通赋值
@@ -41,8 +42,8 @@ const setUrl = (config: AxiosRequestConfig) => {
 
 // 设置请求内容
 const setData = (config: AxiosRequestConfig) => {
-  if (config.headers!['Content-Type'] === contentType.get) {
-    // 若请求头是表单,就清空data(参数在url后)
+  if (config.headers!['Content-Type'] === ContentType.formUrlencoded) {
+    // 若请求头是formUrlencoded,就清空data(参数为query)
     config.data = {}
   } else {
     // 将data中的值做一层空值过滤并且字典排序
@@ -93,6 +94,15 @@ const goLogin = debounce(() => {
   window.location.replace(`${baseURL}/login?redirect=${encodeURIComponent(window.location.href)}`)
 })
 
+// 获取默认的ContentType
+const getContentType = (method: string) => {
+  if (method === 'get') {
+    return ContentType.formUrlencoded
+  } else {
+    return ContentType.json
+  }
+}
+
 // 参数转换
 const transRequestData = (requestData: Request.RequestData) => {
   requestData.headers = requestData.headers || {}
@@ -100,7 +110,7 @@ const transRequestData = (requestData: Request.RequestData) => {
     requestData.headers['Content-Type'] = requestData.contentType
     delete requestData.contentType
   } else {
-    requestData.headers['Content-Type'] = contentType[requestData.method.toLowerCase()]
+    requestData.headers['Content-Type'] = getContentType(requestData.method.toLowerCase())
   }
   if (requestData.responseType) {
     requestData.headers['responseType'] = requestData.responseType

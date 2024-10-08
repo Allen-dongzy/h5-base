@@ -28,7 +28,10 @@ export default (routeList: RouteRecordRaw[]) => {
   const menu = ref<Menu[]>([])
   // 递归菜单
   const recursionMenu = (list: RouteRecordRaw[]): Menu[] => {
-    return list.map((item) => ({
+    // 过滤隐藏菜单
+    const showList = list.filter((item) => item.meta?.hide !== true)
+    // 生成菜单树
+    return showList.map((item) => ({
       key: item?.path as string,
       icon: item.meta?.icon ? () => h(item.meta?.icon || '') : undefined,
       label: item.meta?.title as string,
