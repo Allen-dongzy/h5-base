@@ -97,7 +97,7 @@ const goHome = () => {
           <template v-if="route.meta.noLayoutContent">
             <router-view v-if="isPermission(route.meta.roles as string[])" />
           </template>
-          <a-layout class="layout-content-main content-padding" v-else>
+          <a-layout class="layout-content-main content-padding small-scrollbar" v-else>
             <router-view v-if="isPermission(route.meta.roles as string[])" />
           </a-layout>
         </a-layout-content>
