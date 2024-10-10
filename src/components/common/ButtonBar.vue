@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Buttons } from '@/types/components/ButtonBar.ts'
+import ButtonItem from '@/components/common/ButtonItem.vue'
 
 interface Props {
   size?: number // 间距
@@ -13,18 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
   <div class="button-bar">
     <div class="flex ai-start flex-wrap" :style="{ gap: `${props.size}px` }">
-      <a-button
-        :type="item?.type"
-        :size="item?.size"
-        :loading="item?.loading"
-        :disabled="item?.disabled"
-        :icon="item?.icon"
-        v-for="(item, index) in props.buttons"
-        :key="index"
-        @click="item?.click"
-      >
-        {{ item.text }}
-      </a-button>
+      <ButtonItem v-for="(item, index) in props.buttons" :key="index" :info="item" />
     </div>
   </div>
 </template>
