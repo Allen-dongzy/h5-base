@@ -133,7 +133,7 @@ const goHome = () => {
     }
     // 菜单项被选择后的背景色
     :deep(.ant-menu-item-selected) {
-      background-color: #f5f4f2 !important;
+      background-color: #f2f3f5 !important;
     }
     // 菜单项hover状态的背景色
     :deep(.ant-menu-item.ant-menu-item-active:hover) {
@@ -204,7 +204,7 @@ const goHome = () => {
   }
   &-content {
     height: calc(100% - 62px);
-    background: #f7f7f7;
+    background: #f2f3f5;
     &-main {
       height: calc(100% - 62px - 30px);
       overflow-x: hidden;
@@ -215,7 +215,7 @@ const goHome = () => {
       box-sizing: border-box;
       &::-webkit-scrollbar {
         width: 4px;
-        background: #f7f7f7;
+        background: #f2f3f5;
         border-radius: 10px;
       }
       &::-webkit-scrollbar-thumb {

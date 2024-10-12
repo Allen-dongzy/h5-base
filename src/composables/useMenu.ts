@@ -26,10 +26,12 @@ export default (routeList: RouteRecordRaw[]) => {
 
   // 菜单
   const menu = ref<Menu[]>([])
+  // 全部菜单
+  const allMenu = ref<Menu[]>([])
   // 递归菜单
-  const recursionMenu = (list: RouteRecordRaw[]): Menu[] | void => {
+  const recursionMenu = (list: RouteRecordRaw[], mode: 'all' | 'visible' = 'visible'): Menu[] | void => {
     // 过滤隐藏菜单
-    const showList = list.filter((item) => item.meta?.hide !== true)
+    const showList = mode === 'visible' ? list.filter((item) => item.meta?.hide !== true) : list
     if (showList.length === 0) return undefined
     // 生成菜单树
     return showList.map((item) => ({
@@ -43,6 +45,7 @@ export default (routeList: RouteRecordRaw[]) => {
   // 生成菜单
   const generateMenu = (list: RouteRecordRaw[]) => {
     menu.value = recursionMenu(list) as Menu[]
+    allMenu.value = recursionMenu(list, 'all') as Menu[]
     return menu.value
   }
   generateMenu(routeList)
@@ -106,7 +109,7 @@ export default (routeList: RouteRecordRaw[]) => {
 
   // 监听菜单变化或路由变化,初始化菜单项和面包屑
   watch(
-    () => [menu.value, route.fullPath],
+    () => [menu.value, route.fullPath, routeList],
     () => {
       if (!menu.value || menu.value.length === 0) return
       // 若有路由,则从路由设置菜单项,反之初始化菜单项
@@ -119,10 +122,11 @@ export default (routeList: RouteRecordRaw[]) => {
       } else {
         initSelectKeys(menu.value)
       }
-      breadcrumb.value = getBreadcrumb(menu.value, menuOpenKeys.value)
+      // 面包屑
+      breadcrumb.value = getBreadcrumb(allMenu.value, menuOpenKeys.value)
     },
     { immediate: true }
   )
 
-  return { menu, recursionMenu, generateMenu, menuOpenKeys, menuSelectedKeys, menuClick, initSelectKeys, breadcrumb, getBreadcrumb, breadcrumbSkip, findFirstPermissionMenu }
+  return { menu, allMenu, recursionMenu, generateMenu, menuOpenKeys, menuSelectedKeys, menuClick, initSelectKeys, breadcrumb, getBreadcrumb, breadcrumbSkip, findFirstPermissionMenu }
 }
