@@ -110,7 +110,9 @@ export default (routeList: RouteRecordRaw[]) => {
       if (!menu.value || menu.value.length === 0) return
       // 若有路由,则从路由设置菜单项,反之初始化菜单项
       if (route.fullPath && route.fullPath !== '/') {
-        const path = route.fullPath.split('/').slice(1)
+        const path = route.fullPath.split('/').slice(1).map(item => {
+          return item.includes('?') ? item.split('?')[0] : item
+        })
         menuOpenKeys.value = path
         menuSelectedKeys.value = [path[path.length - 1]]
       } else {
