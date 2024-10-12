@@ -27,21 +27,22 @@ export default (routeList: RouteRecordRaw[]) => {
   // 菜单
   const menu = ref<Menu[]>([])
   // 递归菜单
-  const recursionMenu = (list: RouteRecordRaw[]): Menu[] => {
+  const recursionMenu = (list: RouteRecordRaw[]): Menu[] | void => {
     // 过滤隐藏菜单
     const showList = list.filter((item) => item.meta?.hide !== true)
+    if (showList.length === 0) return undefined
     // 生成菜单树
     return showList.map((item) => ({
       key: item?.path as string,
       icon: item.meta?.icon ? () => h(item.meta?.icon || '') : undefined,
       label: item.meta?.title as string,
       title: item.meta?.title as string,
-      children: item.children ? recursionMenu(item?.children || []) : undefined
-    }))
+      children: item.children && item.children.length > 0 ? recursionMenu(item?.children || []) : undefined
+    })) as Menu[]
   }
   // 生成菜单
   const generateMenu = (list: RouteRecordRaw[]) => {
-    menu.value = recursionMenu(list)
+    menu.value = recursionMenu(list) as Menu[]
     return menu.value
   }
   generateMenu(routeList)
