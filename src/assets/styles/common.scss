@@ -204,3 +204,16 @@
 .hide-scrollbar-width {
   scrollbar-width: none;
 }
+
+// 滚动条-细
+.small-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+    background: #f2f3f5;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e1e1e1;
+    border-radius: 10px;
+  }
+}

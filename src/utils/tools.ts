@@ -299,7 +299,7 @@ const objRemoveEmpty = (obj: Record<string, any>): object => {
 /**
  * 将对象转为url的query参数
  * @param obj 
- * @returns query参数
+ * @returns query字符串
  */
 const objToQuery = (obj: Record<string, any>): string => {
   const objKeys = Object.keys(obj)
@@ -314,7 +314,7 @@ const objToQuery = (obj: Record<string, any>): string => {
 /**
  * 将url的query参数转为对象
  * @param obj 
- * @returns query参数
+ * @returns query对象
  */
 const queryToObj = (query: string): Record<string, any> => {
   if (query?.[0] === '?') query = query.slice(1)
@@ -331,7 +331,7 @@ const queryToObj = (query: string): Record<string, any> => {
  * 下载文件
  * @param {any} res 结果
  * @param {string} type 文件名
- * @returns query参数
+ * @returns void
  */
 const downloadFile = (res: any, name: string = '', type = 'xlsx') => {
   // 文件名
@@ -352,6 +352,35 @@ const downloadFile = (res: any, name: string = '', type = 'xlsx') => {
   a.remove()
 }
 
+/**
+ * 选择文件
+ * @param {any} res 结果
+ * @param {string} accept 文件类型
+ * @returns file
+ */
+const selectFile = ({ max = 1, accept = '*' }) => {
+  return new Promise((resolve, reject) => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = accept // 可以根据需要指定文件类型
+    input.style.display = 'none'
+    if (max > 1) input.multiple = true
+
+    input.addEventListener('change', (event: Event) => {
+      const inputTarget = event.target as HTMLInputElement
+      if (inputTarget.files && inputTarget.files.length > 0) {
+        resolve(Array.from(inputTarget.files).slice(0, max)); // 成功选择文件
+      } else {
+        reject() //失败
+      }
+    });
+
+    document.body.appendChild(input)
+    input.click()
+    document.body.removeChild(input)
+  }).then(res => [null, res]).catch(err => [err])
+}
+
 export {
   toTime, // 时间戳转换为常用时间形式
   toTimestamp, // 常用时间形式转换为时间戳
@@ -369,5 +398,6 @@ export {
   objRemoveEmpty, // 对象属性值去空
   objToQuery, // 将对象转为url的query参数
   queryToObj, // 将url的query参数转为对象
-  downloadFile // 下载文件
+  downloadFile, // 下载文件
+  selectFile // 选择文件
 }

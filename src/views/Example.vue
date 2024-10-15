@@ -6,6 +6,10 @@ import type { Buttons } from '@/types/components/ButtonBar'
 import type { Filters } from '@/types/components/FilterBar'
 import { PieChartOutlined } from '@ant-design/icons-vue'
 import type { Dayjs } from 'dayjs'
+import useModal from '@/composables/useModal'
+import Picture from '@/components/common/Picture.vue'
+
+const { confirmModal } = useModal()
 
 const route = useRoute()
 
@@ -91,11 +95,18 @@ const buttons = reactive<Buttons>({
     text: '删除',
     loading: false,
     click: () => {
-      console.log('删除')
-      buttons.delete.loading = true
-      setTimeout(() => {
-        buttons.delete.loading = false
-      }, 2000)
+      confirmModal({
+        content: '确定删除吗？',
+        confirm: async () => {
+          buttons.delete.loading = true
+          return await new Promise((resolve, reject) => {
+            setTimeout(() => {
+              buttons.delete.loading = false
+              resolve()
+            }, 500)
+          })
+        }
+      })
     }
   }
 })
@@ -131,6 +142,56 @@ onMounted(() => {
     ]
   }, 500)
 })
+
+// 图片区状态
+const defaultPicture = {
+  id: '',
+  url: '',
+  width: 150,
+  height: 150,
+  previewVisible: false
+}
+type Picture = typeof defaultPicture & { setVisible: (value: boolean) => void }
+const pictureState = reactive({
+  list: [] as Picture[]
+})
+const deletePicture = (picture: Picture) => {
+  confirmModal({
+    content: '确定删除吗？',
+    confirm: async () => {
+      console.log('delete', picture)
+      return await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve()
+        }, 500)
+      })
+    }
+  })
+}
+// 图片区状态赋值
+const picList = [
+  {
+    id: '1',
+    url: 'https://img.yzcdn.cn/vant/cat.jpeg'
+  },
+  {
+    id: '2',
+    url: 'https://img1.baidu.com/it/u=2062152131,1998701002&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1421'
+  },
+  {
+    id: '3',
+    url: 'https://pic.rmb.bdstatic.com/bjh/news/57e572cd41520408ebbbe5e3a6fb5b6d.jpeg'
+  }
+]
+picList.forEach((item, index) => {
+  pictureState.list.push({
+    ...defaultPicture,
+    ...item,
+    setVisible: (value: boolean) => {
+      pictureState.list[index].previewVisible = value
+    }
+  })
+})
 </script>
 
 <template>
@@ -149,6 +210,15 @@ onMounted(() => {
         <ButtonBar :buttons="buttons" />
       </div>
     </div>
+    <div class="page-content flex ai-center flex-wrap">
+      <Picture
+        class="picture"
+        :state="item"
+        v-for="(item, index) in pictureState.list"
+        :key="index"
+        @delete="deletePicture"
+      />
+    </div>
   </div>
 </template>
 
@@ -160,6 +230,16 @@ onMounted(() => {
   }
   .filter-area {
     gap: 10px;
+  }
+
+  .page-content {
+    margin: 20px 0;
+    padding-top: 20px;
+    gap: 20px;
+    .picture {
+      border-radius: 5px;
+      overflow: hidden;
+    }
   }
 }
 </style>
