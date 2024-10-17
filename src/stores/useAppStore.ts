@@ -40,6 +40,10 @@ const useAppStore = defineStore('useAppStore', () => {
   const setWindowWidth = (width: number) => {
     windowWidth.value = width
   }
+  // 是否为桌面端
+  const isDesktop = ref(windowWidth.value >= 768)
+  // 是否为移动端
+  const isMobile = ref(windowWidth.value < 768)
 
   return {
     routeStack,
@@ -49,7 +53,9 @@ const useAppStore = defineStore('useAppStore', () => {
     langList,
     setLang,
     windowWidth,
-    setWindowWidth
+    setWindowWidth,
+    isDesktop,
+    isMobile
   }
 })
 
