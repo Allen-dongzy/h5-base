@@ -34,13 +34,22 @@ const useAppStore = defineStore('useAppStore', () => {
     storage.set('lang', lang.value)
   }
 
+  // 窗口宽度
+  const windowWidth = ref(window.innerWidth)
+  // 设置窗口宽度
+  const setWindowWidth = (width: number) => {
+    windowWidth.value = width
+  }
+
   return {
     routeStack,
     setRouteStack,
     clearRouteStack,
     lang,
     langList,
-    setLang
+    setLang,
+    windowWidth,
+    setWindowWidth
   }
 })
 

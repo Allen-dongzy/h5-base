@@ -8,15 +8,16 @@ import localeEn from 'ant-design-vue/es/locale/en_US'
 import 'dayjs/locale/zh-cn'
 import 'dayjs/locale/en'
 import dayjs from 'dayjs'
+import { debounce } from './utils/tools'
 
 // 路由实例
 const router = useRouter()
 // app商店
 const appStore = useAppStore()
-// 设置路由栈
-const { setRouteStack, clearRouteStack } = appStore
-// 路由栈, 语言
-const { routeStack, lang } = storeToRefs(appStore)
+// 设置路由栈, 清空路由栈, 设置窗口宽度
+const { setRouteStack, clearRouteStack, setWindowWidth } = appStore
+// 路由栈, 语言, 窗口宽度
+const { routeStack, lang, windowWidth } = storeToRefs(appStore)
 // 初始化路由栈
 clearRouteStack()
 
@@ -50,6 +51,15 @@ watch(
   },
   { immediate: true }
 )
+
+// 监听屏幕resize
+const handleResize = debounce(function () {
+  console.log('屏幕宽度：', window.innerWidth)
+  setWindowWidth(window.innerWidth)
+  console.log('记录屏幕宽度', windowWidth.value)
+}, 300)
+window.addEventListener('resize', () => handleResize())
+handleResize()
 </script>
 
 <template>
