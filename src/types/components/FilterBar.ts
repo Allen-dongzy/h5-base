@@ -48,9 +48,12 @@ export interface Select {
 
 // 日期范围选择
 export interface RangePicker extends CommonFilterItem {
+  format?: string
+  showTime?: boolean
   disabledDate?: (day: Dayjs) => boolean
   calendarChange?: (days: [Dayjs, Dayjs]) => void
 }
+
 
 // filter配置项集合
 export type Filters = Record<string, FilterItem>

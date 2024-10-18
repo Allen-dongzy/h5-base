@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import type { FilterItem } from '@/types/components/FilterBar'
+import useAppStore from '@/stores/useAppStore'
 
 interface Props {
   query: Record<string, any>
   info: FilterItem
 }
+
 const props = defineProps<Props>()
 const emit = defineEmits(['update:query'])
+
+const appStore = useAppStore()
+const { isMobile } = storeToRefs(appStore)
 
 // 查询参数
 const query = computed({
@@ -20,7 +25,7 @@ const query = computed({
 </script>
 
 <template>
-  <a-space class="filter-item" :size="10">
+  <a-space class="filter-item" :direction="isMobile ? 'vertical' : 'horizontal'" :size="10">
     <div class="title" v-if="props.info?.label">{{ props.info?.label }}：</div>
     <div class="value">
       <!-- 输入框 -->
@@ -98,6 +103,8 @@ const query = computed({
         v-model:value="query[props.info?.key as string]"
         :placeholder="props.info?.placeholder"
         allow-clear
+        :format="props.info?.format"
+        :show-time="props.info?.showTime"
         :disabled-date="props.info?.disabledDate"
         @calendar-change="props.info?.calendarChange"
         @change="props.info?.change"
