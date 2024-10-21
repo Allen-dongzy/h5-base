@@ -11,7 +11,7 @@ const props = defineProps<Props>()
 const emit = defineEmits(['update:query'])
 
 const appStore = useAppStore()
-const { isMobile } = storeToRefs(appStore)
+const { isMobile, isDesktop } = storeToRefs(appStore)
 
 // 查询参数
 const query = computed({
@@ -25,7 +25,11 @@ const query = computed({
 </script>
 
 <template>
-  <a-space class="filter-item" :direction="isMobile ? 'vertical' : 'horizontal'" :size="10">
+  <div
+    class="filter-item"
+    :class="{ 'flex flex-col': isMobile, 'flex ai-start': isDesktop }"
+    :style="{ gap: `${10}px` }"
+  >
     <div class="title" v-if="props.info?.label">{{ props.info?.label }}：</div>
     <div class="value">
       <!-- 输入框 -->
@@ -46,6 +50,16 @@ const query = computed({
           <component v-else :is="props.info?.suffix"></component>
         </template>
       </a-input>
+
+      <!-- 文本框 -->
+      <a-textarea
+        v-if="props.info.component === 'textarea'"
+        :style="{ width: props.info?.width ? `${props.info?.width}px` : 'auto' }"
+        v-model:value="query[props.info?.key as string]"
+        :placeholder="props.info?.placeholder"
+        allow-clear
+        @change="props.info?.change"
+      />
 
       <!-- 数字输入框 -->
       <a-input-number
@@ -110,11 +124,14 @@ const query = computed({
         @change="props.info?.change"
       />
     </div>
-  </a-space>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .filter-item {
+  .title {
+    line-height: 32px;
+  }
   .addon {
     font-size: 12px;
     color: #999999;

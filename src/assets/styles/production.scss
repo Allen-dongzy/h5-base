@@ -6,6 +6,15 @@
   background: #f2f3f5 !important;
 }
 
+.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+  color: #fff !important;
+}
+
+.ant-image > img {
+  object-fit: cover;
+  border-radius: 5px;
+}
+
 .layout-content-main {
   height: calc(100% - 62px - 30px);
   overflow-x: hidden;
