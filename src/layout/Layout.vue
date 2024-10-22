@@ -9,12 +9,6 @@ import useMenu from '@/composables/useMenu'
 const userinfo = ref({
   roleIds: ['admin']
 })
-
-// 退出登录
-const logout = () => {
-  // todo
-  router.replace('/login')
-}
 // 副作用区域-end
 
 const route = useRoute()
@@ -81,7 +75,7 @@ const goHome = () => {
             />
             <span @click="goHome">{{ routes?.[0]?.meta?.title || '管理后台' }}</span>
           </div>
-          <FunctionBar @logout="logout" />
+          <FunctionBar />
         </a-layout-header>
         <a-layout-content class="layout-content">
           <a-breadcrumb class="layout-breadcrumb sel-hide">

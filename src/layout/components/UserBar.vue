@@ -4,8 +4,7 @@ import { ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons-vue
 import { Modal } from 'ant-design-vue'
 import { createVNode } from 'vue'
 
-// emit
-const emit = defineEmits(['logout'])
+const router = useRouter()
 
 // 退出登录
 const logout = () => {
@@ -16,7 +15,7 @@ const logout = () => {
     okText: '确定',
     cancelText: '取消',
     onOk: () => {
-      emit('logout')
+      router.replace('/login')
     }
   })
 }
