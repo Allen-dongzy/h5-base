@@ -22,29 +22,33 @@ const useUserStore = defineStore('useUserStore', () => {
     )
     userinfo.value = currentUserinfo || {}
   }
+
   // 获取用户信息
   const userinfoApi = async () => {
     const [err, res] = await getuserinfo()
-    if (err) return
-    setUserinfo(res.info)
+    if (err) return Promise.reject([true])
+    setUserinfo(res.data)
+    return Promise.resolve([null, true])
   }
 
   // DEBUG登录
   const debugLoginApi = async (userId: string) => {
-    const [err, res] = await debugLogin(userId)
-    if (err) return false
-    setToken(res.data)
-    await userinfoApi()
+    const [debugErr, debugRes] = await debugLogin(userId)
+    if (debugErr) return false
+    setToken(debugRes.data)
+    const [infoErr] = await userinfoApi()
+    if (infoErr) return false
     return true
   }
 
   // 扫码登录
   const qrLoginApi = async (code: string) => {
     const data = { code }
-    const [err, res] = await qrLogin(data)
-    if (err) return false
-    setToken(res.data)
-    await userinfoApi()
+    const [debugErr, debugRes] = await qrLogin(data)
+    if (debugErr) return false
+    setToken(debugRes.data)
+    const [infoErr] = await userinfoApi()
+    if (infoErr) return false
     return true
   }
 
