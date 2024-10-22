@@ -43,23 +43,7 @@ const skip = () => {
 //   }
 // }
 
-// // debug登录管理
-// const debugManager = async () => {
-//   if (!userId) return
-//   const res = await loginDebugApi(userId as string)
-//   if (!res) return
-//   skip()
-// }
-
 // onMounted(async () => {
-//   // [本地/远程dev]开发环境下,debug登录
-//   if (
-//     import.meta.env.MODE === 'development' ||
-//     import.meta.env.VITE_APP_HOST === 'https://dior-message-archiving-dev.yimlinkapp.com'
-//   ) {
-//     debugManager()
-//   }
-//   // 扫码登录
 //   scanManager()
 // })
 </script>
