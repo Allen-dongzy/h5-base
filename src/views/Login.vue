@@ -1,5 +1,7 @@
 <script setup lang="ts" name="login">
 import { routes } from '@/router'
+// import useUserStore from '@/stores/useUserStore'
+// const { qrLoginApi } = useUserStore()
 
 // 路由
 const route = useRouter()
