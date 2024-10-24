@@ -8,7 +8,7 @@ declare module Request {
     | 'multipart/form-data'
 
   // 请求方法
-  export type Method = 'get' | 'post' | 'put' | 'delete'
+  export type Method = 'get' | 'post' | 'postForm' | 'put' | 'delete'
 
   // 请求失败不显示提示
   export interface RequestConfig {
@@ -25,7 +25,7 @@ declare module Request {
       responseType?: 'blob'
     }
     contentType?: ContentType
-    responseType?: 'blob',
+    responseType?: 'blob'
     timeout?: number
   }
 

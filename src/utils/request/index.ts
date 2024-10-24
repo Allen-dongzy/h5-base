@@ -13,7 +13,7 @@ enum ContentType {
 
 // 创建对象
 const Server: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_HOST + import.meta.env.VITE_APP_API_URL_PREFIX,
+  baseURL: import.meta.env.VITE_APP_API_URL_PREFIX,
   timeout: 10000
 })
 
@@ -32,8 +32,8 @@ const setHeader = (config: AxiosRequestConfig) => {
 // 设置url
 const setUrl = (config: AxiosRequestConfig) => {
   if (config.headers!['Content-Type'] === ContentType.formUrlencoded) {
-    // 若请求头是formUrlencoded,就将data参数query化并添加到url(某些接口会有post请求但是请求头又是表单的极端情况)
-    config.url += `${objToQuery(config.data)}`
+    // 若请求头是formUrlencoded,就将data参数滤并排序再query化并添加到url(某些接口会有post请求但是请求头又是表单的极端情况)
+    config.url += `${objToQuery(objKeySort(objRemoveEmpty(config.data)))}`
   } else {
     // 普通赋值
     config.url = `${config.url}`
@@ -45,6 +45,9 @@ const setData = (config: AxiosRequestConfig) => {
   if (config.headers!['Content-Type'] === ContentType.formUrlencoded) {
     // 若请求头是formUrlencoded,就清空data(参数为query)
     config.data = {}
+  } else if (config.data instanceof FormData) {
+    // 若data是FormData类型,就不做处理
+    config.data = config.data
   } else {
     // 将data中的值做一层空值过滤并且字典排序
     config.data = objKeySort(objRemoveEmpty(config.data))
@@ -98,6 +101,8 @@ const goLogin = debounce(() => {
 const getContentType = (method: string) => {
   if (method === 'get') {
     return ContentType.formUrlencoded
+  } else if (method === 'postform') {
+    return ContentType.formData
   } else {
     return ContentType.json
   }
@@ -106,15 +111,21 @@ const getContentType = (method: string) => {
 // 参数转换
 const transRequestData = (requestData: Request.RequestData) => {
   requestData.headers = requestData.headers || {}
+  // 设置请求头
   if (requestData.contentType) {
     requestData.headers['Content-Type'] = requestData.contentType
     delete requestData.contentType
   } else {
     requestData.headers['Content-Type'] = getContentType(requestData.method.toLowerCase())
   }
+  // 设置响应类型
   if (requestData.responseType) {
     requestData.headers['responseType'] = requestData.responseType
     delete requestData.responseType
+  }
+  // postForm转post
+  if (requestData.method === 'postForm') {
+    requestData.method = 'post'
   }
 }
 
