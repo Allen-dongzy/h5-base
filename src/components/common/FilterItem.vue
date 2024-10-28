@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FilterItem } from '@/types/components/FilterBar'
+import type { FilterItem, SelectOption } from '@/types/components/FilterBar'
 import useAppStore from '@/stores/useAppStore'
 
 interface Props {
@@ -22,6 +22,13 @@ const query = computed({
     emit('update:query', val)
   }
 })
+
+// 默认过滤选项
+const defaultFilterOption = (input: string, option: SelectOption) => {
+  const label = props.info?.options?.find((item) => item.value === option.value)?.label
+  if (!label) return false
+  return label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+}
 </script>
 
 <template>
@@ -100,6 +107,8 @@ const query = computed({
         :disabled="props.info?.disabled"
         :loading="props.info?.loading"
         :showSearch="props.info?.showSearch"
+        :searchValue="props.info?.searchValue"
+        :filterOption="props.info?.filterOption || defaultFilterOption"
         :showArrow="props.info?.showArrow"
         :placeholder="props.info?.placeholder"
         allow-clear

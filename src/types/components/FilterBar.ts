@@ -46,8 +46,10 @@ export interface Select {
   disabled?: boolean
   loading?: boolean
   showSearch?: boolean
+  searchValue?: string
   showArrow?: boolean
   options?: SelectOption[]
+  filterOption?: (input: string, option: SelectOption) => boolean
 }
 
 // 日期范围选择
