@@ -12,7 +12,7 @@ const { redirect } = currentRoute.query
 
 // 跳转
 const skip = () => {
-  window.location.replace((redirect as string) || import.meta.env.BASE_URL)
+  window.location.replace((redirect as string) || `${import.meta.env.BASE_URL}/`)
 }
 
 // // 获取agent企业微信配置

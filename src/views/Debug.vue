@@ -10,7 +10,7 @@ const userId = ref('allen.dong')
 
 // 跳转
 const skip = () => {
-  window.location.replace(import.meta.env.BASE_URL)
+  window.location.replace(`${import.meta.env.BASE_URL}/`)
 }
 
 // 登录
