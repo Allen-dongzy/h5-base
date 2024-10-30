@@ -93,7 +93,11 @@ const goLogin = debounce(() => {
   setUserinfo()
   // 跳转到登陆页
   const baseURL = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL
-  window.location.replace(`${baseURL}/login?redirect=${encodeURIComponent(window.location.href)}`)
+  if (import.meta.env.DEV) {
+    window.location.replace(`${baseURL}/debug?redirect=${encodeURIComponent(window.location.href)}`)
+  } else {
+    window.location.replace(`${baseURL}/login?redirect=${encodeURIComponent(window.location.href)}`)
+  }
 })
 
 // 获取默认的ContentType
