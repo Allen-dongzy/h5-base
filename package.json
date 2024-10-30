@@ -7,7 +7,7 @@
     "local:dev": "vite --mode dev",
     "local:uat": "vite --mode uat",
     "local:prod": "vite --mode prod",
-    "build": "pnpm build:dev",
+    "build": "pnpm build:prod",
     "build:dev": "vite build --mode dev",
     "build:uat": "vite build --mode test",
     "build:prod": "vite build --mode prod",
