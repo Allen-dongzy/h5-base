@@ -8,9 +8,19 @@ const { debugLoginApi } = useUserStore()
 // 账号ID
 const userId = ref('allen.dong')
 
+// 路由
+const route = useRouter()
+const currentRoute = route.currentRoute.value
+const code = currentRoute.query?.code || ''
+
+// 重定向地址
+const { redirect } = currentRoute.query
+
 // 跳转
 const skip = () => {
-  window.location.replace(`${import.meta.env.BASE_URL}/`)
+  let baseUrl = import.meta.env.BASE_URL
+  if (!baseUrl.endsWith('/')) baseUrl += '/'
+  window.location.replace((redirect as string) || baseUrl)
 }
 
 // 登录
