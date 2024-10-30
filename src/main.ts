@@ -20,3 +20,9 @@ app.use(Antd)
 app.use(i18n)
 
 app.mount('#app')
+
+console.log('------------------------------------')
+console.log('开发环境', import.meta.env.DEV)
+console.log('打包环境', import.meta.env.PROD)
+console.log('服务器环境', import.meta.env.MODE)
+console.log('------------------------------------')
