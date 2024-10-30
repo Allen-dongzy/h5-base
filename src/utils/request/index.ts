@@ -42,12 +42,11 @@ const setUrl = (config: AxiosRequestConfig) => {
 
 // 设置请求内容
 const setData = (config: AxiosRequestConfig) => {
+  // 若data是FormData类型,就不做处理
+  if (config.headers!['Content-Type'] === ContentType.formData) return
   if (config.headers!['Content-Type'] === ContentType.formUrlencoded) {
     // 若请求头是formUrlencoded,就清空data(参数为query)
     config.data = {}
-  } else if (config.data instanceof FormData) {
-    // 若data是FormData类型,就不做处理
-    config.data = config.data
   } else {
     // 将data中的值做一层空值过滤并且字典排序
     config.data = objKeySort(objRemoveEmpty(config.data))
@@ -70,7 +69,7 @@ Server.interceptors.response.use(
   // 拦截到响应对象，将响应对象的 data 属性返回给调用的地方
   (res: AxiosResponse<Request.ResponseData>) => {
     const data = res.data as Request.ResponseData
-    if (data instanceof Blob) return Promise.resolve(data)
+    if (data instanceof Blob) return Promise.resolve(res)
     if (!Object.prototype.hasOwnProperty.call(data, 'code')) return Promise.resolve(data)
     if (data.code !== '200') {
       if (['700'].includes(data.code as string)) {
@@ -117,11 +116,6 @@ const transRequestData = (requestData: Request.RequestData) => {
     delete requestData.contentType
   } else {
     requestData.headers['Content-Type'] = getContentType(requestData.method.toLowerCase())
-  }
-  // 设置响应类型
-  if (requestData.responseType) {
-    requestData.headers['responseType'] = requestData.responseType
-    delete requestData.responseType
   }
   // postForm转post
   if (requestData.method === 'postForm') {
