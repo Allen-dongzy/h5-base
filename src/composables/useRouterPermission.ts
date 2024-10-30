@@ -38,9 +38,11 @@ export default (roleIds: string[]) => {
   }
   permissionRouters.value = filterNoPermissionRouteList(routers.value)
 
-
   // 当前路由是否有权限
   const isPermission = (currentRouteRoles: string[]) => {
+    if (!currentRouteRoles || currentRouteRoles.length === 0) {
+      return true
+    }
     return currentRouteRoles.some((item) => roles.value.includes(item))
   }
   // 找到第一个有权限的路径
