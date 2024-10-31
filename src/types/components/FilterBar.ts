@@ -50,6 +50,8 @@ export interface Select {
   showArrow?: boolean
   options?: SelectOption[]
   filterOption?: (input: string, option: SelectOption) => boolean
+  search?: (value: string) => void
+  select?: (value: string, option: SelectOption) => void
 }
 
 // 日期范围选择

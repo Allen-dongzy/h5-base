@@ -98,6 +98,7 @@ const defaultFilterOption = (input: string, option: SelectOption) => {
       </a-input-number>
 
       <!-- 下拉选择框 -->
+      <!-- 使用search以及select配合laoding的时候记得关闭filterOption,否则会同时进行本地抖索 -->
       <a-select
         v-if="props.info.component === 'select'"
         ref="select"
@@ -105,18 +106,20 @@ const defaultFilterOption = (input: string, option: SelectOption) => {
         v-model:value="query[props.info?.key as string]"
         :mode="props.info?.mode"
         :disabled="props.info?.disabled"
-        :loading="props.info?.loading"
         :showSearch="props.info?.showSearch"
         :searchValue="props.info?.searchValue"
         :filterOption="props.info?.filterOption || defaultFilterOption"
         :showArrow="props.info?.showArrow"
         :placeholder="props.info?.placeholder"
         allow-clear
+        :options="props.info?.options"
         @change="props.info?.change"
+        @search="props.info?.search"
+        @select="props.info?.select"
       >
-        <a-select-option v-for="item in props.info?.options" :value="item.value" :key="item.value">
-          {{ item.label }}
-        </a-select-option>
+        <template v-if="props.info?.loading" #notFoundContent>
+          <a-spin size="small" />
+        </template>
       </a-select>
 
       <!-- 日期范围 -->
