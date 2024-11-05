@@ -1,24 +1,32 @@
 import { onUpdated, ref } from 'vue'
 
-export default () => {
+interface TableHeightProps {
+  tableHeaderHeight?: number
+  tablePaginationHeight?: number
+  otherHeight?: number
+}
+
+export default (props?: TableHeightProps) => {
+  // 表格头部高度
+  const tableHeaderHeight = props?.tableHeaderHeight || 55
+  // 分页器高度
+  const tablePaginationHeight = props?.tablePaginationHeight || 64
+  // 其他高度
+  const otherHeight = props?.otherHeight || 20
+
+  // 表格容器ref
+  const tableContentRef = ref<HTMLElement | null>(null)
   // 表格滚动条区域的高度
-  const tableHeight = ref<number | string | undefined>(undefined)
-  // 过滤条元素
-  const filterAreaRef = ref<HTMLElement | null>()
+  const tableHeight = ref(0)
 
   onUpdated(() => {
-    const pageContent = document.getElementsByClassName('layout-content-main')[0]
-    const fliterBar = filterAreaRef.value
-
-    const pageContentHeight = pageContent.clientHeight
-    const pageContentPaddingTop = 30
-    const filterBarHeight = fliterBar ? fliterBar.clientHeight : 0
-    const tableMarginTop = 30
-    const tableHeadHeight = 55
-    const paginationHeight = 64
-
-    tableHeight.value = pageContentHeight - pageContentPaddingTop - filterBarHeight - tableMarginTop - tableHeadHeight - paginationHeight
+    if (!tableContentRef.value) return
+    tableHeight.value =
+      tableContentRef.value.offsetHeight -
+      tableHeaderHeight -
+      tablePaginationHeight -
+      otherHeight
   })
 
-  return { tableHeight, filterAreaRef }
+  return { tableHeight, tableContentRef }
 }
