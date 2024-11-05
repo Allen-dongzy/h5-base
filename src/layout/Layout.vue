@@ -199,28 +199,9 @@ const goHome = () => {
   &-content {
     height: calc(100% - 62px);
     background: #f2f3f5;
-    &-main {
-      height: calc(100% - 62px - 30px);
-      overflow-x: hidden;
-      overflow-y: auto;
-      background: #ffffff;
-      margin: 0 30px;
-      padding: 30px 30px 0;
-      box-sizing: border-box;
-      &::-webkit-scrollbar {
-        width: 4px;
-        background: #f2f3f5;
-        border-radius: 10px;
-      }
-      &::-webkit-scrollbar-thumb {
-        background: #e1e1e1;
-        border-radius: 10px;
-        box-shadow: 0 0 3px #999;
-      }
-    }
   }
   &-breadcrumb {
-    padding: 20px 30px;
+    padding: 20px 20px;
     &-item {
       cursor: pointer;
     }
