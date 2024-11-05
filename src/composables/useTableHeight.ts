@@ -1,3 +1,4 @@
+import { debounce } from '@/utils/tools'
 import { onUpdated, ref } from 'vue'
 
 interface TableHeightProps {
@@ -19,13 +20,24 @@ export default (props?: TableHeightProps) => {
   // 表格滚动条区域的高度
   const tableHeight = ref(0)
 
-  onUpdated(() => {
+  // 设置表格高度
+  const setTableHeight = debounce(() => {
     if (!tableContentRef.value) return
     tableHeight.value =
       tableContentRef.value.offsetHeight -
       tableHeaderHeight -
       tablePaginationHeight -
       otherHeight
+  }, 100)
+
+  // 页面更新
+  onUpdated(() => {
+    setTableHeight()
+  })
+
+  // 窗口大小变化
+  window.addEventListener('resize', () => {
+    setTableHeight()
   })
 
   return { tableHeight, tableContentRef }
