@@ -73,7 +73,7 @@ const pictureError = () => {
         visible: pictureState.previewVisible,
         onVisibleChange: setPreviewVisible
       }"
-      @click="isErr ? selectPicture() : undefined"
+      @click="!isErr ? selectPicture() : undefined"
       @error="pictureError"
     >
       <template #previewMask>
