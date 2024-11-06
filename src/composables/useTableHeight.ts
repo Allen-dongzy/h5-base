@@ -9,11 +9,11 @@ interface TableHeightProps {
 
 export default (props?: TableHeightProps) => {
   // 表格头部高度
-  const tableHeaderHeight = props?.tableHeaderHeight || 55
+  const tableHeaderHeight = props?.tableHeaderHeight !== undefined ? props.tableHeaderHeight : 55
   // 分页器高度
-  const tablePaginationHeight = props?.tablePaginationHeight || 64
+  const tablePaginationHeight = props?.tablePaginationHeight !== undefined ? props.tablePaginationHeight : 64
   // 其他高度
-  const otherHeight = props?.otherHeight || 20
+  const otherHeight = props?.otherHeight !== undefined ? props.otherHeight : 20
 
   // 表格容器ref
   const tableContentRef = ref<HTMLElement | null>(null)
@@ -30,13 +30,13 @@ export default (props?: TableHeightProps) => {
       otherHeight
   }, 100)
 
-  // 页面更新
-  onUpdated(() => {
+  onMounted(() => {
     setTableHeight()
   })
 
   // 窗口大小变化
   window.addEventListener('resize', () => {
+    console.log('size')
     setTableHeight()
   })
 
