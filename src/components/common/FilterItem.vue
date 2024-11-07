@@ -111,6 +111,7 @@ const defaultFilterOption = (input: string, option: SelectOption) => {
         :filterOption="props.info?.filterOption || defaultFilterOption"
         :showArrow="props.info?.showArrow"
         :placeholder="props.info?.placeholder"
+        :maxTagCount="props.info?.maxTagCount || 2"
         allow-clear
         :options="props.info?.options"
         @change="props.info?.change"

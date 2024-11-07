@@ -49,6 +49,7 @@ export interface Select {
   searchValue?: string
   showArrow?: boolean
   options?: SelectOption[]
+  maxTagCount?: number
   filterOption?: (input: string, option: SelectOption) => boolean
   search?: (value: string) => void
   select?: (value: string, option: SelectOption) => void
