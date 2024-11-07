@@ -59,7 +59,6 @@ export default (routeList: RouteRecordRaw[]) => {
   const menuClick = ({ key, keyPath }: MenuEvent) => {
     menuSelectedKeys.value = [key || '']
     menuOpenKeys.value = keyPath || []
-    breadcrumb.value = getBreadcrumb(menu.value, keyPath)
     router.replace(`/${keyPath.join('/')}`)
   }
   // 初始化选择项
@@ -76,18 +75,6 @@ export default (routeList: RouteRecordRaw[]) => {
 
   // 面包屑
   const breadcrumb = ref<Menu[]>([])
-  // 获取面包屑
-  const getBreadcrumb = (list: Menu[], keyPath: string[]): Menu[] => {
-    const breadcrumb = []
-    const current = list.find((item) => item.key === keyPath[0])
-    if (current) {
-      breadcrumb.push(current)
-    }
-    if (current?.children) {
-      breadcrumb.push(...getBreadcrumb(current.children, keyPath.slice(1)))
-    }
-    return breadcrumb
-  }
   // 面包屑跳转
   const breadcrumbSkip = (menu: Menu[], index: number) => {
     if (index === 0) {
@@ -107,26 +94,66 @@ export default (routeList: RouteRecordRaw[]) => {
   }
 
 
+  // 获取打开的路由列表
+  const getOpenRouteList = (routeList: RouteRecordRaw[], pathList: string[]): RouteRecordRaw[] => {
+    const breadcrumb: RouteRecordRaw[] = []
+    const current = routeList.find((item) => item.path === pathList[0])
+    if (current) {
+      breadcrumb.push(current)
+    }
+    if (current?.children) {
+      breadcrumb.push(...getOpenRouteList(current.children, pathList.slice(1)))
+    }
+    return breadcrumb
+  }
+  // 路由列表转菜单列表
+  const routeListTransformMenu = (routeList: RouteRecordRaw[]): Menu[] => {
+    return routeList.map((item) => ({
+      key: item.path as string,
+      icon: item.meta?.icon ? () => h(item.meta?.icon || '') : undefined,
+      label: item.meta?.title as string,
+      title: item.meta?.title as string,
+      children: item.children && item.children.length > 0 ? routeListTransformMenu(item.children) : undefined
+    })) as Menu[]
+  }
+
+  
   // 监听菜单变化或路由变化,初始化菜单项和面包屑
   watch(
     () => [menu.value, route.fullPath, routeList],
     () => {
       if (!menu.value || menu.value.length === 0) return
-      // 若有路由,则从路由设置菜单项,反之初始化菜单项
       if (route.fullPath && route.fullPath !== '/') {
-        const path = route.fullPath.split('/').slice(1).map(item => {
+        // 设置菜单项
+        const pathList = route.fullPath.split('/').slice(1).map(item => {
           return item.includes('?') ? item.split('?')[0] : item
         })
-        menuOpenKeys.value = path
-        menuSelectedKeys.value = [path[path.length - 1]]
+        menuOpenKeys.value = pathList
+        menuSelectedKeys.value = [pathList[pathList.length - 1]]
+        // 获取已经展开的路由列表并转换为菜单列表,设置面包屑
+        const openRouteList = getOpenRouteList(routeList, pathList)
+        breadcrumb.value = routeListTransformMenu(openRouteList)
       } else {
+        // 初始化菜单项
         initSelectKeys(menu.value)
       }
-      // 面包屑
-      breadcrumb.value = getBreadcrumb(allMenu.value, menuOpenKeys.value)
     },
     { immediate: true }
   )
 
-  return { menu, allMenu, recursionMenu, generateMenu, menuOpenKeys, menuSelectedKeys, menuClick, initSelectKeys, breadcrumb, getBreadcrumb, breadcrumbSkip, findFirstPermissionMenu }
+  return {
+    menu,
+    allMenu,
+    recursionMenu,
+    generateMenu,
+    menuOpenKeys,
+    menuSelectedKeys,
+    menuClick,
+    initSelectKeys,
+    breadcrumb,
+    breadcrumbSkip,
+    findFirstPermissionMenu,
+    getOpenRouteList,
+    routeListTransformMenu
+  }
 }
