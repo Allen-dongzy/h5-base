@@ -36,7 +36,6 @@ export default (props?: TableHeightProps) => {
 
   // 窗口大小变化
   window.addEventListener('resize', () => {
-    console.log('size')
     setTableHeight()
   })
 
