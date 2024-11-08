@@ -4,6 +4,7 @@ import FunctionBar from '@/layout/components/FunctionBar.vue'
 import { routes } from '@/router'
 import useRouterPermission from '@/composables/useRouterPermission'
 import useMenu from '@/composables/useMenu'
+import useBreadcrumb from '@/composables/useBreadcrumb'
 
 // 副作用区域-start
 const userinfo = ref({
@@ -25,10 +26,11 @@ if (!isPermission(route.meta.roles as string[])) {
   router.replace(path)
 }
 
-// 菜单, 当前打开的菜单项, 当前选择的菜单项, 菜单点击事件, 面包屑, 面包屑跳转
-const { menu, menuOpenKeys, menuSelectedKeys, menuClick, breadcrumb, breadcrumbSkip } = useMenu(
-  permissionRouters.value
-)
+// 菜单, 当前打开的菜单项, 当前选择的菜单项, 菜单点击事件
+const { menu, menuOpenKeys, menuSelectedKeys, menuClick } = useMenu(permissionRouters.value)
+
+// 面包屑, 面包屑跳转
+const { breadcrumb, breadcrumbSkip } = useBreadcrumb(permissionRouters.value)
 
 // 侧边栏收缩
 const siderCollapsed = ref(false)
