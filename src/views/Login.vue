@@ -1,11 +1,12 @@
 <script setup lang="ts" name="login">
+import { useRouter } from 'vue-router'
 import { routes } from '@/router'
 // import useUserStore from '@/stores/useUserStore'
 // const { qrLoginApi } = useUserStore()
 
 // 路由
-const route = useRouter()
-const currentRoute = route.currentRoute.value
+const router = useRouter()
+const currentRoute = router.currentRoute.value
 // const code = currentRoute.query?.code || ''
 
 // 重定向地址

@@ -1,6 +1,7 @@
 <script setup lang="ts" name="layout">
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import FunctionBar from '@/layout/components/FunctionBar.vue'
+import RouterView from '@/layout/RouterView.vue'
 import { routes } from '@/router'
 import useRouterPermission from '@/composables/useRouterPermission'
 import useMenu from '@/composables/useMenu'
@@ -91,10 +92,16 @@ const goHome = () => {
             </a-breadcrumb-item>
           </a-breadcrumb>
           <template v-if="route.meta.noLayoutContent">
-            <router-view v-if="isPermission(route.meta.roles as string[])" />
+            <RouterView
+              name="noClassLayoutContent"
+              v-if="isPermission(route.meta.roles as string[])"
+            />
           </template>
           <a-layout class="layout-content-main content-padding small-scrollbar" v-else>
-            <router-view v-if="isPermission(route.meta.roles as string[])" />
+            <RouterView
+              name="classLayoutContent"
+              v-if="isPermission(route.meta.roles as string[])"
+            />
           </a-layout>
         </a-layout-content>
       </a-layout>
