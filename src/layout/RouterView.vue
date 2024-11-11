@@ -12,6 +12,9 @@ const { keepAliveList } = storeToRefs(appStore)
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
+  if (from?.meta?.keepAlive) {
+    setKeepAliveList(from.name as string)
+  }
   if (to?.meta?.keepAlive) {
     setKeepAliveList(to.name as string)
   }

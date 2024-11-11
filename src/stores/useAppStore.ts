@@ -13,10 +13,12 @@ const useAppStore = defineStore('useAppStore', () => {
     }
     console.log('keepAliveList', keepAliveList.value)
   }
-  // 清空缓存组件列表
-  const clearKeepAliveList = () => {
-    keepAliveList.value = []
-    storage.set('keepAliveList', [])
+  // 删除缓存组件项
+  const removeKeepAliveItem = (routerName: string) => {
+    const removeKeepAliveIndex = keepAliveList.value.findIndex((keepAliveRouterName: string) => keepAliveRouterName === routerName)
+    if (removeKeepAliveIndex >= 0) {
+      keepAliveList.value.splice(removeKeepAliveIndex)
+    }
   }
 
   // 语言类型
@@ -46,7 +48,7 @@ const useAppStore = defineStore('useAppStore', () => {
   return {
     keepAliveList,
     setKeepAliveList,
-    clearKeepAliveList,
+    removeKeepAliveItem,
     lang,
     langList,
     setLang,
