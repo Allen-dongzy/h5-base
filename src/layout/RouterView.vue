@@ -7,14 +7,10 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <div class="router-view" :data-name="props.name || undefined">
-    <router-view />
-  </div>
+  <router-view :data-name="props.name || undefined" />
 </template>
 
 <style scoped lang="scss">
 .router-view {
-  width: 100%;
-  height: 100%;
 }
 </style>
