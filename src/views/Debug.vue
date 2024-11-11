@@ -1,4 +1,4 @@
-<script setup lang="ts" name="debug">
+<script setup lang="ts">
 import useUserStore from '@/stores/useUserStore'
 import { ref } from 'vue'
 

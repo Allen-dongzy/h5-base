@@ -30,7 +30,7 @@ export interface RouteRecord extends Record<string, any> {
 export const routes: Array<RouteRecord> = [
   {
     path: '/',
-    name: 'layout',
+    name: 'Layout',
     component: () => import('@/layout/Layout.vue'),
     redirect: '/route1',
     meta: {
@@ -38,7 +38,7 @@ export const routes: Array<RouteRecord> = [
     },
     children: [{
       path: 'route1',
-      name: 'route1',
+      name: 'Route1',
       redirect: '/route1/route10',
       meta: {
         title: 'route1',
@@ -47,7 +47,7 @@ export const routes: Array<RouteRecord> = [
       },
       children: [{
         path: 'route10',
-        name: 'route10',
+        name: 'Route10',
         component: () => import('@/views/Example.vue'),
         meta: {
           title: 'route10'
@@ -55,7 +55,7 @@ export const routes: Array<RouteRecord> = [
       }]
     }, {
       path: 'route2',
-      name: 'route2',
+      name: 'Route2',
       component: () => import('@/views/Example.vue'),
       meta: {
         title: 'route2',
@@ -64,7 +64,7 @@ export const routes: Array<RouteRecord> = [
       }
     }, {
       path: 'route3',
-      name: 'route3',
+      name: 'Route3',
       redirect: '/route3/route30',
       meta: {
         title: 'route3',
@@ -73,14 +73,14 @@ export const routes: Array<RouteRecord> = [
       },
       children: [{
         path: 'route30',
-        name: 'route30',
+        name: 'Route30',
         component: () => import('@/views/Example.vue'),
         meta: {
           title: 'route30'
         }
       }, {
         path: 'route31',
-        name: 'route31',
+        name: 'Route31',
         component: () => import('@/views/Example.vue'),
         meta: {
           title: 'route31',
@@ -89,7 +89,7 @@ export const routes: Array<RouteRecord> = [
       }]
     }, {
       path: 'route4',
-      name: 'route4',
+      name: 'Route4',
       component: () => import('@/views/Example.vue'),
       meta: {
         title: 'route4',
@@ -101,12 +101,12 @@ export const routes: Array<RouteRecord> = [
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: () => import('@/views/Login.vue')
   },
   {
     path: '/:pathMatch(.*)*',
-    name: 'notFind',
+    name: 'NotFind',
     component: () => import('@/views/NotFind.vue')
   }
 ]
@@ -115,7 +115,7 @@ export const routes: Array<RouteRecord> = [
 if (['dev', 'uat'].includes(import.meta.env.MODE)) {
   routes.push({
     path: '/debug',
-    name: 'debug',
+    name: 'Debug',
     component: () => import('@/views/Debug.vue')
   })
 }

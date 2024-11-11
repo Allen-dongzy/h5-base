@@ -1,4 +1,4 @@
-<script setup lang="ts" name="example">
+<script setup lang="ts">
 import FilterBar from '@/components/common/FilterBar.vue'
 import ButtonBar from '@/components/common/ButtonBar.vue'
 import FilterArea from '@/components/common/FilterArea.vue'
