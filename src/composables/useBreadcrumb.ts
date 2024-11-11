@@ -1,6 +1,5 @@
-import type { VNode } from 'vue'
-import type { RouteRecordRaw } from 'vue-router'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, watch, type VNode } from 'vue'
+import { useRouter, useRoute, type RouteRecordRaw } from 'vue-router'
 
 // 菜单类型
 export interface Menu {

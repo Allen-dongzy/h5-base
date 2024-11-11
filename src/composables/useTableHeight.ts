@@ -1,5 +1,5 @@
 import { debounce } from '@/utils/tools'
-import { onUpdated, ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 interface TableHeightProps {
   tableHeaderHeight?: number
