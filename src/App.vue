@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import useAppStore from '@/stores/useAppStore'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import theme from '@/theme'
 import localeZh from 'ant-design-vue/es/locale/zh_CN'
@@ -8,32 +7,15 @@ import localeEn from 'ant-design-vue/es/locale/en_US'
 import 'dayjs/locale/zh-cn'
 import 'dayjs/locale/en'
 import dayjs from 'dayjs'
+import KeepAliveRouterView from '@/layout/KeepAliveRouterView.vue'
 import { debounce } from './utils/tools'
 
-// 路由实例
-const router = useRouter()
 // app商店
 const appStore = useAppStore()
-// 设置路由栈, 清空路由栈, 设置窗口宽度
-const { setRouteStack, clearRouteStack, setWindowWidth } = appStore
-// 路由栈, 语言, 窗口宽度
-const { routeStack, lang, windowWidth } = storeToRefs(appStore)
-// 初始化路由栈
-clearRouteStack()
-
-// 路由守卫
-router.beforeEach((to, from, next) => {
-  // 待写入路由栈
-  const stack = to.matched && to.matched.length > 1 ? to.matched : [to]
-  // 写入路由
-  stack.forEach((item) => {
-    if (item.name === 'layout') {
-      clearRouteStack()
-    }
-    setRouteStack(item.name as string)
-  })
-  next()
-})
+// 设置窗口宽度
+const { setWindowWidth } = appStore
+// 语言, 窗口宽度
+const { lang, windowWidth } = storeToRefs(appStore)
 
 // i18n
 const { locale } = useI18n()
@@ -64,14 +46,7 @@ handleResize()
 
 <template>
   <a-config-provider :theme="theme" :locale="antdLocale">
-    <router-view v-slot="{ Component }">
-      <transition name="fade-transform" mode="out-in">
-        <!-- 动态更新keep-alive -->
-        <keep-alive :include="routeStack">
-          <component :is="Component" />
-        </keep-alive>
-      </transition>
-    </router-view>
+    <KeepAliveRouterView />
   </a-config-provider>
 </template>
 

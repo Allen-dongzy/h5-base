@@ -1,24 +1,22 @@
 import storage from '@/utils/storage'
 
 const useAppStore = defineStore('useAppStore', () => {
-  // 路由栈
-  const routeStack = ref<string[]>(storage.get('routeStack') || [])
-  // 设置路由栈
-  const setRouteStack = (routeName: string) => {
-    // 查询当前路由名称在路由栈中的索引
-    const routeIndex = routeStack.value.findIndex((item) => item === routeName)
-    // 如果不存在,则添加到路由栈中(前进) 如果存在,则删除当前路由名称之后的路由(回退)
-    if (routeIndex === -1) {
-      routeStack.value.push(routeName)
+  // 缓存组件列表
+  const keepAliveList = ref<string[]>(storage.get('keepAliveList') || [])
+  // 设置缓存组件列表
+  const setKeepAliveList = (routerName: string) => {
+    const keepAliveIndex = keepAliveList.value.findIndex((keepAliveRouterName: string) => keepAliveRouterName === routerName)
+    if (keepAliveIndex >= 0) {
+      keepAliveList.value.splice(keepAliveIndex + 1)
     } else {
-      routeStack.value.splice(routeIndex + 1)
+      keepAliveList.value.push(routerName)
     }
-    storage.set('routeStack', routeStack.value)
+    console.log('keepAliveList', keepAliveList.value)
   }
-  // 清空路由栈
-  const clearRouteStack = () => {
-    routeStack.value = []
-    storage.set('routeStack', [])
+  // 清空缓存组件列表
+  const clearKeepAliveList = () => {
+    keepAliveList.value = []
+    storage.set('keepAliveList', [])
   }
 
   // 语言类型
@@ -46,9 +44,9 @@ const useAppStore = defineStore('useAppStore', () => {
   const isMobile = ref(windowWidth.value < 768)
 
   return {
-    routeStack,
-    setRouteStack,
-    clearRouteStack,
+    keepAliveList,
+    setKeepAliveList,
+    clearKeepAliveList,
     lang,
     langList,
     setLang,
