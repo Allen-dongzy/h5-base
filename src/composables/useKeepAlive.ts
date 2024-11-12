@@ -1,4 +1,4 @@
-import { ref, onActivated } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useAppStore from '@/stores/useAppStore'
 
@@ -21,24 +21,25 @@ export default () => {
   // 前往的路由名称
   const toName = ref('')
 
-  // 设置需要缓存的路由信息
-  const setRouteInfo = (toRouterName: routeParam['toRouterName']) => {
+  // 缓存当前路由
+  const cacheCurrentRoute = (toRouterName: routeParam['toRouterName']) => {
     selfName.value = router.currentRoute.value.name as string
     toName.value = toRouterName
     router.currentRoute.value.meta.keepAlive = true
   }
 
-  onActivated(() => {
-    // 缓存组件被激活并且路由信息一致,则取消缓存
-    if (router.currentRoute.value.name === selfName.value) {
-      router.currentRoute.value.meta.keepAlive = false
-      removeKeepAliveItem(selfName.value)
+  // 路由守卫
+  router.beforeEach((to, from, next) => {
+    // 如果跳转到当前路由 并且 前来的路由不是最初前往的路由,则取消缓存
+    if (to.name === selfName.value && from.name !== toName.value) {
+      removeKeepAliveItem(to.name)
     }
+    next()
   })
 
   return {
     selfName,
     toName,
-    setRouteInfo
+    cacheCurrentRoute
   }
 }
