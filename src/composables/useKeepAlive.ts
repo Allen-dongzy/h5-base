@@ -28,13 +28,22 @@ export default () => {
     router.currentRoute.value.meta.keepAlive = true
   }
 
-  // 路由守卫
+  // 来到本路由前的操作
   router.beforeEach((to, from, next) => {
-    // 如果跳转到当前路由 并且 前来的路由不是最初前往的路由,则取消缓存
+    // 如果跳转回当前路由 并且 前来的路由不是最初前往的路由,则清除缓存
     if (to.name === selfName.value && from.name !== toName.value) {
       removeKeepAliveItem(to.name)
     }
     next()
+  })
+
+  // 重回缓存路由的操作
+  onActivated(() => {
+    // 重置
+    selfName.value = ''
+    toName.value = ''
+    // 清除缓存
+    removeKeepAliveItem(router.currentRoute.value.name as string)
   })
 
   return {
