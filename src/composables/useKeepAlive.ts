@@ -21,8 +21,8 @@ export default () => {
   // 前往的路由名称
   const toName = ref('')
 
-  // 缓存当前路由
-  const cacheCurrentRoute = (toRouterName: routeParam['toRouterName']) => {
+  // 缓存路由
+  const cacheRoute = (toRouterName: routeParam['toRouterName']) => {
     selfName.value = router.currentRoute.value.name as string
     toName.value = toRouterName
     router.currentRoute.value.meta.keepAlive = true
@@ -40,6 +40,6 @@ export default () => {
   return {
     selfName,
     toName,
-    cacheCurrentRoute
+    cacheRoute
   }
 }
