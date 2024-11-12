@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useAppStore from '@/stores/useAppStore'
 import { useI18n } from 'vue-i18n'
+import { message } from 'ant-design-vue'
 import theme from '@/theme'
 import localeZh from 'ant-design-vue/es/locale/zh_CN'
 import localeEn from 'ant-design-vue/es/locale/en_US'
@@ -16,6 +17,11 @@ const appStore = useAppStore()
 const { setWindowWidth } = appStore
 // 语言, 窗口宽度
 const { lang, windowWidth } = storeToRefs(appStore)
+
+// 设置message
+message.config({
+  maxCount: 1 //页面中同时展示几条
+})
 
 // i18n
 const { locale } = useI18n()
