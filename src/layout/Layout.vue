@@ -24,7 +24,9 @@ const { permissionRouters, isPermission, findFirstPermissionPath } = useRouterPe
 // 若当前路由无权限则重定向到第一个有权限的路由
 if (!isPermission(route.meta.roles as string[])) {
   const path = findFirstPermissionPath(permissionRouters.value)
-  router.replace(path)
+  if (path !== '/example') {
+    router.replace(path)
+  }
 }
 
 // 菜单, 当前打开的菜单项, 当前选择的菜单项, 菜单点击事件

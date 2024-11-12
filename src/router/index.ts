@@ -97,6 +97,15 @@ export const routes: Array<RouteRecord> = [
         roles: ['admin'],
         hide: true // 隐藏菜单
       }
+    }, {
+      path: 'example',
+      name: 'Example',
+      component: () => import('@/views/Example.vue'),
+      meta: {
+        title: 'example',
+        icon: DesktopOutlined,
+        hide: true
+      }
     }]
   },
   {
