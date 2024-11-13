@@ -94,8 +94,10 @@ const goHome = () => {
             </a-breadcrumb-item>
           </a-breadcrumb>
           <a-layout
+            class="layout-content-main content-height"
             :class="{
-              'layout-content-main content-padding small-scrollbar': !route.meta.noLayoutContent
+              'layout-content-main content-height content-padding small-scrollbar':
+                !route.meta.noLayoutContent
             }"
           >
             <KeepAliveRouterView v-if="isPermission(route.meta.roles as string[])" />

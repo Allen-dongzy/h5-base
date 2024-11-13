@@ -1,3 +1,4 @@
+// antd样式覆写
 .ant-select-item-option-selected {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
@@ -10,23 +11,41 @@
   color: #fff !important;
 }
 
+.ant-tabs-content.ant-tabs-content-top {
+  height: 100%;
+}
+
 .ant-image > img {
   object-fit: cover;
   border-radius: 5px;
 }
 
+// a-tab中a-tabs和a-tab-pane中的样式
+.scrollbar-tab {
+  height: 100%;
+  &-pane {
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+// 公共布局样式
 .layout-content-main {
-  height: calc(100% - 62px - 20px);
+  height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   background: #ffffff;
   margin: 0 25px;
   box-sizing: border-box;
+  &.content-height {
+    height: calc(100% - 62px - 20px);
+  }
   &.content-padding {
     padding: 20px;
   }
 }
 
+// 公共筛选框样式
 .page-filter-box {
   padding: 20px;
   background: #f2f3f5;
@@ -41,6 +60,7 @@
   }
 }
 
+// 公共工具栏样式
 .page-tools {
   border-radius: 2px;
   margin-top: 15px;
@@ -48,7 +68,8 @@
   padding: 15px 20px;
 }
 
+// 公共内容样式
 .page-content {
   background-color: #f2f3f5;
-  padding: 0 20px 20px;
+  padding: 0 20px;
 }
