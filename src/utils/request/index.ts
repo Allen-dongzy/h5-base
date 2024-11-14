@@ -14,7 +14,7 @@ enum ContentType {
 // 创建对象
 const Server: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL_PREFIX,
-  timeout: 10000
+  timeout: 30000
 })
 
 // 设置请求头
