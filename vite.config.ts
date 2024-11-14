@@ -1,8 +1,13 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
+import type { PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import AutoImport from 'unplugin-auto-import/vite'
+import removeConsole from "vite-plugin-remove-console"
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
+import viteCompression from 'vite-plugin-compression'
+import visualizer from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -12,8 +17,8 @@ export default defineConfig(({ command, mode }) => {
   return {
     base: command === 'serve' ? env.VITE_APP_LOCAL_URL_PREFIX : env.VITE_APP_SERVER_URL_PREFIX, // 若是及本地启动则使用本地服务器url前缀，否则使用远程服务器url前缀
     plugins: [
-      vue(),
-      vueJsx(),
+      vue(), // 解析sfc
+      vueJsx(), // 解析jsx
       AutoImport({
         dirs: ['./src/stores/*.ts'],
         dts: './presets/auto-import/d.ts/auto-import.d.ts',
@@ -23,7 +28,16 @@ export default defineConfig(({ command, mode }) => {
           filepath: './presets/auto-import/.eslintrc-auto-import.json', // 生成json文件,可以不配置该项，默认就是将生成在根目录
           globalsPropValue: true
         }
-      })
+      }), // 自动引入(为了文件依赖追踪的良好体验,只自动导入核心三件套, 不引入unplugin-vue-components也是同理,公共hook之类的配置依旧推荐手动导入三件套,以免移植其他不支持自动导入的项目后还需要手动排查)
+      removeConsole(), // 移除console
+      ViteImageOptimizer(), // 图片压缩
+      viteCompression(), // 代码压缩
+      visualizer({
+        filename: './node_modules/.cache/visualizer/stats.html',
+        open: true,
+        gzipSize: true,
+        brotliSize: true,
+      }) as PluginOption // 依赖分析
     ],
     resolve: {
       alias: {
