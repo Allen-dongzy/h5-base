@@ -210,14 +210,19 @@
 }
 
 // 滚动条-细
+
 .small-scrollbar {
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
+    height: 6px;
     background: #f2f3f5;
-    border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background: #e1e1e1;
-    border-radius: 10px;
+    background: #dcdcdc;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 3px;
   }
 }

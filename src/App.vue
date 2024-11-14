@@ -10,6 +10,18 @@ import 'dayjs/locale/en'
 import dayjs from 'dayjs'
 import KeepAliveRouterView from '@/layout/KeepAliveRouterView.vue'
 import { debounce } from './utils/tools'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import { useRouter } from 'vue-router'
+
+// 设置路由进度条
+const router = useRouter()
+router.beforeEach(() => {
+  NProgress.start()
+})
+router.afterEach(() => {
+  NProgress.done()
+})
 
 // app商店
 const appStore = useAppStore()
