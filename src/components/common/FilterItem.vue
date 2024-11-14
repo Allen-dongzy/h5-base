@@ -113,13 +113,21 @@ const defaultFilterOption = (input: string, option: SelectOption) => {
         :placeholder="props.info?.placeholder"
         :maxTagCount="props.info?.maxTagCount || 2"
         allow-clear
-        :options="props.info?.options"
         @change="props.info?.change"
         @search="props.info?.search"
         @select="props.info?.select"
       >
         <template v-if="props.info?.loading" #notFoundContent>
           <a-spin size="small" />
+        </template>
+        <template v-if="!props.info?.loading">
+          <a-select-option
+            v-for="(item, index) in props.info?.options"
+            :value="item.value"
+            :key="String(item.value) + index"
+          >
+            {{ item.label }}
+          </a-select-option>
         </template>
       </a-select>
 
