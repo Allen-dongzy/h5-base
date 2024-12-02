@@ -114,18 +114,22 @@ button::after {
 // 设置nprogress进度条样式
 #nprogress {
   pointer-events: none;
-}
+  // 滚动条
+  .bar {
+    background-color: #000000;
 
-#nprogress .bar {
-  background-color: #000000;
+    position: fixed;
+    z-index: 1031;
+    top: 0;
+    left: 0;
 
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
+    width: 100%;
+    height: 2px;
+  }
+  // loading元素
+  .spinner {
+    display: none;
+  }
 }
 
 // 全局滚动条
