@@ -1,6 +1,6 @@
-import type { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
+import type { AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError } from 'axios'
 import axios from 'axios'
-import { message } from 'ant-design-vue'
+import { Modal, message } from 'ant-design-vue'
 import { objRemoveEmpty, objKeySort, objToQuery, debounce } from '@/utils/tools'
 import useUserStore from '@/stores/useUserStore'
 
@@ -63,6 +63,61 @@ Server.interceptors.request.use(
   },
   (err) => Promise.reject(err)
 )
+
+// http请求错误处理
+const httpErrorHandler = (err: AxiosError<Request.ResponseData>) => {
+  // 这里是HTTP返回状态码不为200时候的错误处理
+  if (err && err.response) {
+    switch (err.response.status) {
+      case 400:
+        err.message = '请求错误'
+        break
+      case 401:
+        err.message = '未授权，请登录'
+        break
+      case 403:
+        err.message = '拒绝访问'
+        break
+      case 404:
+        err.message = `请求地址出错: ${err.response.config.url}`
+        break
+      case 408:
+        err.message = '请求超时'
+        break
+      case 500:
+        err.message = '服务器内部错误'
+        break
+      case 501:
+        err.message = '服务未实现'
+        break
+      case 502:
+        err.message = '网关错误'
+        break
+      case 503:
+        err.message = '服务不可用'
+        break
+      case 504:
+        err.message = '网关超时'
+        break
+      case 505:
+        err.message = 'HTTP版本不受支持'
+        break
+      default:
+    }
+  }
+  // 弹出提示
+  Modal.error({
+    title: err?.message || '错误',
+    content: h('div', {}, [
+      h('h4', `httpStatus: ${err?.response?.status || '无'}`),
+      h('h4', `接口Status: ${err?.response?.data?.code || err?.response?.data?.status || '无'}`),
+      h('p', `请求method: ${err?.config?.method || '无'}`),
+      h('p', `请求Content-Type: ${err?.config?.headers?.['Content-Type'] || '无'}`),
+      h('p', `请求url: ${err?.config?.url || '无'}`)
+    ])
+  });
+}
+
 
 // 响应拦截器
 Server.interceptors.response.use(
