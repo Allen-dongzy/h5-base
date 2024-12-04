@@ -49,8 +49,8 @@ const deletePicture = (picture: State) => {
 }
 // 选择图片
 const selectPicture = async () => {
-  const [err, res] = await selectFile({ max: 1, accept: 'image/*' })
-  if (err) return
+  const { err, res } = await selectFile({ max: 1, accept: 'image/*' })
+  if (err !== null) return
   emit('select', res)
 }
 

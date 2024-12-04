@@ -359,7 +359,7 @@ const downloadFile = (res: any, name: string = '', type = 'xlsx') => {
  * @returns file
  */
 const selectFile = ({ max = 1, accept = '*' }) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<File[]>((resolve, reject) => {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = accept // 可以根据需要指定文件类型
@@ -369,7 +369,8 @@ const selectFile = ({ max = 1, accept = '*' }) => {
     input.addEventListener('change', (event: Event) => {
       const inputTarget = event.target as HTMLInputElement
       if (inputTarget.files && inputTarget.files.length > 0) {
-        resolve(Array.from(inputTarget.files).slice(0, max)); // 成功选择文件
+        const file = Array.from(inputTarget.files).slice(0, max)
+        resolve(file); // 成功选择文件
       } else {
         reject() //失败
       }
@@ -378,7 +379,7 @@ const selectFile = ({ max = 1, accept = '*' }) => {
     document.body.appendChild(input)
     input.click()
     document.body.removeChild(input)
-  }).then(res => [null, res]).catch(err => [err])
+  }).then((res) => ({ err: null, res })).catch((err: string) => ({ err, res: null }))
 }
 
 export {

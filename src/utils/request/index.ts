@@ -4,6 +4,17 @@ import { Modal, message } from 'ant-design-vue'
 import { objRemoveEmpty, objKeySort, objToQuery, debounce } from '@/utils/tools'
 import useUserStore from '@/stores/useUserStore'
 
+// 需要根据项目来配置-start
+// 接口状态码属性名
+const interfaceCodeName: 'code' | 'status' = 'code'
+
+// 接口状态码类型
+enum InterfaceCode {
+  success = '200',
+  authorization = '401'
+}
+// 需要根据项目来配置-end
+
 // ContentType类型
 enum ContentType {
   formUrlencoded = 'application/x-www-form-urlencoded',
@@ -110,7 +121,7 @@ const httpErrorHandler = (err: AxiosError<Request.ResponseData>) => {
     title: err?.message || '错误',
     content: h('div', {}, [
       h('h4', `httpStatus: ${err?.response?.status || '无'}`),
-      h('h4', `接口Status: ${err?.response?.data?.code || err?.response?.data?.status || '无'}`),
+      h('h4', `接口Status: ${err?.response?.data?.[interfaceCodeName] || '无'}`),
       h('p', `请求method: ${err?.config?.method || '无'}`),
       h('p', `请求Content-Type: ${err?.config?.headers?.['Content-Type'] || '无'}`),
       h('p', `请求url: ${err?.config?.url || '无'}`)
@@ -118,26 +129,51 @@ const httpErrorHandler = (err: AxiosError<Request.ResponseData>) => {
   });
 }
 
+// 下载excel文件
+const downloadFile = (res: AxiosResponse) => {
+  // 文件名
+  let fileName = res.headers?.['content-disposition']?.split('=')?.[1] ? decodeURI(res.headers['content-disposition'].split('=')[1]) : '文件'
+  // 特殊处理名称所包含的特殊字符
+  fileName = fileName.indexOf('\'\'') > -1 ? fileName.split('\'\'')[1] : fileName
+  // 文件
+  const file = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+  const url = URL.createObjectURL(file)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  a.click()
+  a.remove()
+}
 
 // 响应拦截器
 Server.interceptors.response.use(
   // 拦截到响应对象，将响应对象的 data 属性返回给调用的地方
-  (res: AxiosResponse<Request.ResponseData>) => {
+  (res) => {
     const data = res.data as Request.ResponseData
-    if (data instanceof Blob) return Promise.resolve(res)
-    if (!Object.prototype.hasOwnProperty.call(data, 'code')) return Promise.resolve(data)
-    if (data.code !== '200') {
-      if (['700'].includes(data.code as string)) {
+    // 如果是Blob类型的数据，直接下载文件
+    if (data instanceof Blob) {
+      downloadFile(res)
+      return Promise.resolve({ data: res } as AxiosResponse<any, any>)
+    }
+    // 如果没有code直接返回数据
+    if (!Object.prototype.hasOwnProperty.call(data, interfaceCodeName)) return Promise.resolve(res)
+    // 接口错误处理
+    if (![InterfaceCode.success].includes(data[interfaceCodeName] as any)) {
+      if ([InterfaceCode.authorization].includes(data[interfaceCodeName] as any)) {
         message.error('登录验证失败,请重新登录')
         goLogin()
       } else if (!(res.config as Request.RequestData).errNoTip) {
         message.error(data.message || '请求失败')
       }
-      return Promise.reject(data)
+      return Promise.reject(res)
     }
-    return Promise.resolve(data as any)
+    return Promise.resolve(res)
   },
-  (err) => Promise.reject(err)
+  (err: AxiosError<Request.ResponseData>) => {
+    // http错误处理
+    httpErrorHandler(err)
+    Promise.reject(err)
+  }
 )
 
 // 前往登录
@@ -183,13 +219,17 @@ const transRequestData = (requestData: Request.RequestData) => {
 }
 
 // 请求request
-const request = async (requestData: Request.RequestData) => {
+const request = async <T = any>(requestData: Request.RequestData) => {
   // 参数转换
   transRequestData(requestData)
   // Promise的then和catch处理包装
-  return (Server(requestData) as Promise<any>)
-    .then((res) => [null, res])
-    .catch((err) => [err, null])
+  return (Server<Request.ResponseData<T>>(requestData))
+    .then((res) => {
+      return { err: null, res: res.data }
+    })
+    .catch((err: AxiosResponse<Request.ResponseData>) => {
+      return { err: err.data, res: null }
+    })
 }
 
 export default request

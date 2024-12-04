@@ -1,8 +1,9 @@
 import request from '@/utils/request'
+import type { Userinfo } from '@/types/interface/users'
 
 // 获取用户信息
 export const getuserinfo = () => {
-  return request({
+  return request<Partial<Userinfo>>({
     url: '/users/getuserinfo',
     method: 'post',
     data: {}

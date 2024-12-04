@@ -25,18 +25,18 @@ const useUserStore = defineStore('useUserStore', () => {
 
   // 获取用户信息
   const userinfoApi = async () => {
-    const [err, res] = await getuserinfo()
+    const { err, res } = await getuserinfo()
     if (err) return Promise.reject([true])
     setUserinfo(res.data)
-    return Promise.resolve([null, true])
+    return Promise.resolve({ err: null, res: true })
   }
 
   // DEBUG登录
   const debugLoginApi = async (userId: string) => {
-    const [debugErr, debugRes] = await debugLogin(userId)
+    const { err: debugErr, res: debugRes } = await debugLogin(userId)
     if (debugErr) return false
     setToken(debugRes.data)
-    const [infoErr] = await userinfoApi()
+    const { err: infoErr } = await userinfoApi()
     if (infoErr) return false
     return true
   }
@@ -44,10 +44,10 @@ const useUserStore = defineStore('useUserStore', () => {
   // 扫码登录
   const qrLoginApi = async (code: string) => {
     const data = { code }
-    const [debugErr, debugRes] = await qrLogin(data)
+    const { err: debugErr, res: debugRes } = await qrLogin(data)
     if (debugErr) return false
     setToken(debugRes.data)
-    const [infoErr] = await userinfoApi()
+    const { err: infoErr } = await userinfoApi()
     if (infoErr) return false
     return true
   }

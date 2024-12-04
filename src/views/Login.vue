@@ -21,7 +21,7 @@ const skip = () => {
 
 // // 获取agent企业微信配置
 // const entryFirstApi = async () => {
-//   const [err, res] = await entryFirst()
+//   const {err, res} = await entryFirst()
 //   if (err) return
 //   return res.data
 // }
