@@ -4,10 +4,12 @@ import type { PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import AutoImport from 'unplugin-auto-import/vite'
-import removeConsole from "vite-plugin-remove-console"
+import removeConsole from 'vite-plugin-remove-console'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 import viteCompression from 'vite-plugin-compression'
 import visualizer from 'rollup-plugin-visualizer'
+// @ts-ignore
+import postcssPxToViewport from 'postcss-px-to-viewport'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -36,7 +38,7 @@ export default defineConfig(({ command, mode }) => {
         filename: './node_modules/.cache/visualizer/stats.html',
         open: true,
         gzipSize: true,
-        brotliSize: true,
+        brotliSize: true
       }) as PluginOption // 依赖分析
     ],
     resolve: {
@@ -49,6 +51,11 @@ export default defineConfig(({ command, mode }) => {
         scss: {
           additionalData: '@import "@/assets/styles/mixins.scss";' // 每个scss文件会自动加入这段导入mixin的代码
         }
+      },
+      postcss: {
+        plugins: [
+          postcssPxToViewport()
+        ]
       }
     },
     server: {

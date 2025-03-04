@@ -151,11 +151,11 @@ const defaultPicture = {
   height: 150,
   previewVisible: false
 }
-type Picture = typeof defaultPicture & { setVisible: (value: boolean) => void }
+type IPicture = typeof defaultPicture & { setVisible: (value: boolean) => void }
 const pictureState = reactive({
-  list: [] as Picture[]
+  list: [] as IPicture[]
 })
-const deletePicture = (picture: Picture) => {
+const deletePicture = (picture: IPicture) => {
   confirmModal({
     content: '确定删除吗？',
     confirm: async () => {

@@ -11,7 +11,7 @@ interface State {
 }
 interface Props {
   state: State
-  mode: 'single' | 'multiple'
+  mode?: 'single' | 'multiple'
 }
 const props = withDefaults(defineProps<Props>(), {
   state: () => ({
@@ -29,9 +29,9 @@ const emit = defineEmits(['update:state', 'delete', 'select'])
 const pictureState = computed({
   get: () => {
     if (props.state) {
-      props.state.width = props.state.width || 150
-      props.state.height = props.state.height || 150
-      props.state.previewVisible = props.state.previewVisible || false
+      props.state!.width = props.state.width || 150
+      props.state!.height = props.state.height || 150
+      props.state!.previewVisible = props.state.previewVisible || false
     }
     return props.state
   },

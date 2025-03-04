@@ -12,7 +12,7 @@
     "*.env": "$(capture).env.*",
     "CHANGELOG.md": "CHANGELOG*",
     "project.config.json": "project.*.json",
-    "package.json": "pnpm-lock.yaml,pnpm-workspace.yaml,LICENSE,.gitattributes,.gitignore,.gitpod.yml,CNAME,README*,.npmrc,.browserslistrc",
-    ".eslintrc.*": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.prettierrc.*,.stylelintrc.*,.eslintrc-components.json,.eslintrc-auto-import.json"
+    "package.json": "pnpm-lock.yaml,pnpm-workspace.yaml,LICENSE,.gitattributes,.gitignore,.gitpod.yml,CNAME,README*,.npmrc,.browserslistrc,",
+    ".eslintrc.*": ".eslintignore,.prettierignore,.stylelintignore,commitlint.*,.commitlintrc.*,.prettierrc.*,.stylelintrc.*,.eslintrc-components.json,.eslintrc-auto-import.json,postcss*"
   },
 }
