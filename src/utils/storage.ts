@@ -1,4 +1,4 @@
-const STORAGE_KEY: string = 'admin-storage'
+const STORAGE_KEY: string = 'h5-storage'
 
 const storage = {
 
