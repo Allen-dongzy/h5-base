@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
 import App from './App.vue'
-import router from './router'
-import Antd from 'ant-design-vue'
-import 'ant-design-vue/dist/reset.css'
-import i18n from './locales'
+
+// 引入插件
+import importRouter from '@/router/importRouter'
+import importStores from '@/stores/importStores'
+import importVant from '@/vant/importVant'
+import importLocales from '@/locales/importLocales'
 
 // css
 import '@/assets/styles/reset.scss'
@@ -14,10 +14,14 @@ import '@/assets/styles/common.scss'
 
 const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
-app.use(Antd)
-app.use(i18n)
+// 引入router
+importRouter(app)
+// 引入stores
+importStores(app)
+// 引入vant
+importVant(app)
+// 引入locales
+importLocales(app)
 
 app.mount('#app')
 

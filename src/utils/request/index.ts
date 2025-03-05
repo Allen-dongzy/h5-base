@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError } from 'axios'
 import axios from 'axios'
-import { Modal, message } from 'ant-design-vue'
+import { showDialog, showToast } from 'vant'
 import { objRemoveEmpty, objKeySort, objToQuery, debounce } from '@/utils/tools'
 import useUserStore from '@/stores/useUserStore'
 
@@ -117,16 +117,16 @@ const httpErrorHandler = (err: AxiosError<Request.ResponseData>) => {
     }
   }
   // 弹出提示
-  Modal.error({
+  showDialog({
     title: err?.message || '错误',
-    content: h('div', {}, [
-      h('h4', `httpStatus: ${err?.response?.status || '无'}`),
-      h('h4', `接口Status: ${err?.response?.data?.[interfaceCodeName] || '无'}`),
-      h('p', `请求method: ${err?.config?.method || '无'}`),
-      h('p', `请求Content-Type: ${err?.config?.headers?.['Content-Type'] || '无'}`),
-      h('p', `请求url: ${err?.config?.url || '无'}`)
-    ])
-  });
+    message: `
+      httpStatus: ${err?.response?.status || '无'}\n
+      接口Status: ${err?.response?.data?.[interfaceCodeName] || '无'}\n
+      请求method: ${err?.config?.method || '无'}\n
+      请求Content-Type: ${err?.config?.headers?.['Content-Type'] || '无'}\n
+      请求url: ${err?.config?.url || '无'}
+    `
+  })
 }
 
 // 下载excel文件
@@ -160,10 +160,10 @@ Server.interceptors.response.use(
     // 接口错误处理
     if (![InterfaceCode.success].includes(data[interfaceCodeName] as any)) {
       if ([InterfaceCode.authorization].includes(data[interfaceCodeName] as any)) {
-        message.error('登录验证失败,请重新登录')
+        showToast('登录验证失败,请重新登录')
         goLogin()
       } else if (!(res.config as Request.RequestData).errNoTip) {
-        message.error(data.message || '请求失败')
+        showToast(data.message || '请求失败')
       }
       return Promise.reject(res)
     }
