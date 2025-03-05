@@ -125,7 +125,8 @@ const httpErrorHandler = (err: AxiosError<Request.ResponseData>) => {
       请求method: ${err?.config?.method || '无'}\n
       请求Content-Type: ${err?.config?.headers?.['Content-Type'] || '无'}\n
       请求url: ${err?.config?.url || '无'}
-    `
+    `,
+    messageAlign: 'left'
   })
 }
 
