@@ -11,7 +11,6 @@ const useAppStore = defineStore('useAppStore', () => {
     } else {
       keepAliveList.value.push(routerName)
     }
-    console.log('keepAliveList', keepAliveList.value)
   }
   // 删除缓存组件项
   const removeKeepAliveItem = (routerName: string) => {

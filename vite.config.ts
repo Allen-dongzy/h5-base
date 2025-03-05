@@ -8,7 +8,6 @@ import removeConsole from 'vite-plugin-remove-console'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 import viteCompression from 'vite-plugin-compression'
 import visualizer from 'rollup-plugin-visualizer'
-// @ts-ignore
 import postcssPxToViewport from 'postcss-px-to-viewport'
 
 // https://vitejs.dev/config/
@@ -54,7 +53,34 @@ export default defineConfig(({ command, mode }) => {
       },
       postcss: {
         plugins: [
-          postcssPxToViewport()
+          // 适配设计稿
+          postcssPxToViewport({
+            unitToConvert: 'px', // 需要转换的单位
+            viewportWidth: 750, // 设计稿宽度
+            unitPrecision: 5, // 转换后的精度
+            propList: ['*'], // 需要转换的属性，['*'] 代表所有
+            viewportUnit: 'vw', // 目标单位
+            fontViewportUnit: 'vw', // 字体使用的单位
+            selectorBlackList: [], // 忽略的样式类
+            minPixelValue: 1, // 小于 1px 不转换
+            mediaQuery: false, // 允许在媒体查询中转换
+            replace: true, // 替换而不是添加备用单位
+            exclude: [/node_modules/] // 忽略的文件或文件夹
+          }),
+          // 适配vant
+          postcssPxToViewport({
+            unitToConvert: 'px', // 需要转换的单位
+            viewportWidth: 375, // 设计稿宽度
+            unitPrecision: 5, // 转换后的精度
+            propList: ['*'], // 需要转换的属性，['*'] 代表所有
+            viewportUnit: 'vw', // 目标单位
+            fontViewportUnit: 'vw', // 字体使用的单位
+            selectorBlackList: [], // 忽略的样式类
+            minPixelValue: 1, // 小于 1px 不转换
+            mediaQuery: false, // 允许在媒体查询中转换
+            replace: true, // 替换而不是添加备用单位
+            include: [/node_modules\/vant/] // 只转换 Vant
+          })
         ]
       }
     },

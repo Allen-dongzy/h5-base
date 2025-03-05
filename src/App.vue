@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import useAppStore from '@/stores/useAppStore'
 import { useI18n } from 'vue-i18n'
-import theme from '@/theme'
+import theme from '@/vant/theme'
 import localeZh from 'vant/es/locale/lang/zh-CN'
 import localeEn from 'vant/es/locale/lang/en-US'
 import 'dayjs/locale/zh-cn'
@@ -57,8 +57,9 @@ handleResize()
 </script>
 
 <template>
-  <KeepAliveRouterView />
-  <!-- <a-config-provider :theme="theme" :locale="UILocale"> </a-config-provider> -->
+  <van-config-provider theme-vars-scope="global" :theme-vars="theme">
+    <KeepAliveRouterView />
+  </van-config-provider>
 </template>
 
 <style scoped lang="scss"></style>

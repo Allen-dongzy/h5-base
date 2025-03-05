@@ -4,10 +4,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 // 路由meta信息
 export interface RouteRecordMeta extends Record<string, any> {
   title: string
-  icon: any // 图标 antd-vue的icon组件
-  noLayoutContent: boolean // 容器是否加一个layout-content类
   roles: string[]
-  hide: boolean
   keepAlive: boolean
 }
 
@@ -31,12 +28,16 @@ export const routes: Array<RouteRecord> = [
     meta: {
       title: 'H5-base'
     },
-    children: []
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/Login.vue')
+    children: [{
+      path: '/route1',
+      name: 'Route1',
+      component: () => import('@/views/route1/Route1.vue'),
+      meta: {
+        title: 'Route1',
+        roles: ['admin'],
+        keepAlive: true
+      }
+    }]
   },
   {
     path: '/:pathMatch(.*)*',

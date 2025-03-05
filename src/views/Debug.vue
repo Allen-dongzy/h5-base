@@ -34,17 +34,32 @@ const login = async () => {
 
 <template>
   <div class="debug flex jc-center ai-center">
-    <a-input class="input" v-model:value="userId" placeholder="请输入账号ID" />
-    <a-button type="primary" @click="login">Login</a-button>
+    <van-field class="input" v-model="userId" center :border="false" clearable placeholder="请输入账号ID" />
+    <van-button type="primary" @click="login" class="button">Login</van-button>
   </div>
 </template>
 
 <style scoped lang="scss">
 .debug {
   height: 100vh;
+  padding: 80px;
+  box-sizing: border-box;
   .input {
-    width: 200px;
+    position: relative;
     margin-right: 10px;
+    &::before {
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      border: 1px solid #003594;
+      box-sizing: border-box;
+      border-radius: 8px;
+      pointer-events: none;
+    }
   }
 }
 </style>
