@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-
 // 路由meta信息
 export interface RouteRecordMeta extends Record<string, any> {
   title: string
@@ -28,16 +27,17 @@ export const routes: Array<RouteRecord> = [
     meta: {
       title: 'H5-base'
     },
-    children: [{
-      path: '/route1',
-      name: 'Route1',
-      component: () => import('@/views/route1/Route1.vue'),
-      meta: {
-        title: 'Route1',
-        roles: ['admin'],
-        keepAlive: true
+    children: [
+      {
+        path: '/route1',
+        name: 'Route1',
+        component: () => import('@/views/route1/Route1.vue'),
+        meta: {
+          title: 'Route1',
+          roles: ['admin']
+        }
       }
-    }]
+    ]
   },
   {
     path: '/:pathMatch(.*)*',
