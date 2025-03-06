@@ -1,8 +1,6 @@
 {
   // i18n-ally 配置
-  "i18n-ally.localesPaths": [
-    "src/locales"
-  ],
+  "i18n-ally.localesPaths": ["src/locales"],
   // 文件折叠
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
@@ -11,8 +9,8 @@
     "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
     "*.env": "$(capture).env.*",
     "CHANGELOG.md": "CHANGELOG*",
-    "project.config.json": "project.*.json",
-    "package.json": "pnpm-lock.yaml,pnpm-workspace.yaml,LICENSE,.gitattributes,.gitignore,.gitpod.yml,.cz-config.js,CNAME,README*,.npmrc,.browserslistrc,",
-    ".eslintrc.*": ".eslint*,.prettier*,.stylelint*,commitlint*,.postcss*"
-  },
+    "project.config.json": "project.*",
+    "package.json": "LICENSE,browserslistrc,pnpm-*,.git*,README*,.npm*,.cz-config*,commitlint*",
+    ".eslintrc.*": ".eslint*,.prettier*,.stylelint*,.postcss*"
+  }
 }
