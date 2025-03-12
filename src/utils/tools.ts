@@ -1,9 +1,11 @@
+import { isNumber } from 'lodash-es'
+
 export interface IUnknownTime {
-  Y: number,
-  M: number,
-  D: number,
-  h: number,
-  m: number,
+  Y: number
+  M: number
+  D: number
+  h: number
+  m: number
   s: number
 }
 
@@ -14,7 +16,10 @@ export interface IUnknownTime {
  * @param {string} mode 要转换成的模式
  * @returns {Date | Object | string | null} 可以渲染的时间格式
  */
-const toTime = (timestamp: number | string, mode: string = 'Object'): Date | object | string | null => {
+const toTime = (
+  timestamp: number | string,
+  mode: string = 'Object'
+): Date | object | string | null => {
   if (!timestamp) return null
   const timeLen = timestamp.toString().length
   if (timeLen !== 10 && timeLen !== 13) return null
@@ -50,14 +55,17 @@ const toTime = (timestamp: number | string, mode: string = 'Object'): Date | obj
  * @param {number} len 时间戳长度
  * @returns {number | null} 时间戳
  */
-const toTimestamp = (unknownTime: Date | string | IUnknownTime, len: number = 13): number | null => {
+const toTimestamp = (
+  unknownTime: Date | string | IUnknownTime,
+  len: number = 13
+): number | null => {
   if (!unknownTime) return null
   let result: number | null = null
   const type = getType(unknownTime)
   if (type === 'Date') {
     result = (unknownTime as Date).getTime()
   } else if (type === 'Object') {
-    const { Y, M, D, h, m, s } = (unknownTime as IUnknownTime)
+    const { Y, M, D, h, m, s } = unknownTime as IUnknownTime
     result = new Date(Y, M - 1, D, h, m, s).getTime()
   } else if (type === 'String') {
     const date = (unknownTime as string).split(' ')[0]
@@ -69,7 +77,14 @@ const toTimestamp = (unknownTime: Date | string | IUnknownTime, len: number = 13
     } else if (~date.indexOf('-')) {
       dateArr = date.split('-')
     }
-    result = new Date(dateArr[0], dateArr[1] - 1, dateArr[2], timeArr[0], timeArr[1], timeArr[2]).getTime()
+    result = new Date(
+      dateArr[0],
+      dateArr[1] - 1,
+      dateArr[2],
+      timeArr[0],
+      timeArr[1],
+      timeArr[2]
+    ).getTime()
   }
   if (len === 10) (result as number) /= 1000
   return result
@@ -82,7 +97,10 @@ const toTimestamp = (unknownTime: Date | string | IUnknownTime, len: number = 13
  * @param {number | string | null} timeStamp2 第二个时间戳
  * @returns {number} 时间戳差值
  */
-const timeStampDiff = (timeStamp1: number | string, timeStamp2: number | string | null = null): number => {
+const timeStampDiff = (
+  timeStamp1: number | string,
+  timeStamp2: number | string | null = null
+): number => {
   if (!timeStamp2) {
     timeStamp2 = timeStamp1
     timeStamp1 = Date.now()
@@ -96,7 +114,9 @@ const timeStampDiff = (timeStamp1: number | string, timeStamp2: number | string 
  * @param {number} timeStamp 时间戳差值
  * @returns {{D: string, h: string, m: string, s: string} | null} 倒计时对象，里面含有天时分秒
  */
-const toInterval = (timeStamp: number): { D: string | number, h: string | number, m: string | number, s: string | number } | null => {
+const toInterval = (
+  timeStamp: number
+): { D: string | number; h: string | number; m: string | number; s: string | number } | null => {
   const D = numberFormat(parseInt((timeStamp / 86400).toString())) as string | number
   timeStamp = timeStamp % 86400
   const h = numberFormat(parseInt((timeStamp / 3600).toString())) as string | number
@@ -160,7 +180,7 @@ const getType = (variable: any): string | null => {
  */
 const hideMobile = (mobile: number | string): string | null => {
   if (!mobile) return null
-  mobile = (mobile as string)
+  mobile = mobile as string
   return `${mobile.slice(0, 3)}****${mobile.slice(7, 11)}`
 }
 
@@ -198,11 +218,13 @@ const setClipboard = (text: any): Promise<any> => {
 
     // input自带的select()方法在苹果端无法进行选择，所以需要自己去写一个类似的方法
     function selectText(textbox: HTMLInputElement | null, startIndex: number, stopIndex: number) {
-      const { setSelectionRange, focus } = (textbox as HTMLInputElement)
+      const { setSelectionRange, focus } = textbox as HTMLInputElement
       setSelectionRange(startIndex, stopIndex)
       focus()
     }
-  }).then(res => [null, res]).catch(err => [err])
+  })
+    .then((res) => [null, res])
+    .catch((err) => [err])
 }
 
 /**
@@ -214,7 +236,8 @@ const getVideoCover = (event: any) => {
   return new Promise((resolve) => {
     const videoEle = event.target // 当前video dom节点
     videoEle.currentTime = 1 // 设置视频开始播放时间（因为有些手机第一帧显示黑屏，所以这里选取视频的第一秒作为封面）
-    videoEle.addEventListener('canplay', function () { // 监听video的canplay事件
+    videoEle.addEventListener('canplay', function () {
+      // 监听video的canplay事件
       // 创建canvas元素 并设置canvas大小等于video节点的大小
       const canvas = document.createElement('canvas')
       const scale = 0.8 // 压缩系数
@@ -236,10 +259,11 @@ const getVideoCover = (event: any) => {
  * @returns {(function(): void)} 无
  */
 const debounce = (callback: Function, delay: number = 800): Function => {
-  let timer: any  // 闭包存定时器状态
+  let timer: any // 闭包存定时器状态
   return function (this: any, args?: any) {
     if (timer) clearTimeout(timer) // 清除定时器
-    timer = setTimeout(() => { // 回调
+    timer = setTimeout(() => {
+      // 回调
       callback.call(this, args)
     }, delay)
   }
@@ -255,13 +279,15 @@ const throttle = (callback: Function, delay: number = 800) => {
   let isFirst = true
   let start = Date.now() // 闭包存起始时间
   return function (this: any, args?: any) {
-    if (isFirst) { // 第一次触发
+    if (isFirst) {
+      // 第一次触发
       callback.apply(this, args)
       start = Date.now()
       isFirst = false
       return
     }
-    if (Date.now() - start > delay) { // 满足间隔时长触发
+    if (Date.now() - start > delay) {
+      // 满足间隔时长触发
       callback.apply(this, args)
       start = Date.now()
     }
@@ -291,14 +317,15 @@ const objRemoveEmpty = (obj: Record<string, any>): object => {
   const objKeys = Object.keys(obj)
   const newObj: Record<string, any> = {}
   for (let i = 0; i < objKeys.length; i++) {
-    if (obj[objKeys[i]] || obj[objKeys[i]] === 0 || obj[objKeys[i]] === false) newObj[objKeys[i]] = obj[objKeys[i]]
+    if (obj[objKeys[i]] || obj[objKeys[i]] === 0 || obj[objKeys[i]] === false)
+      newObj[objKeys[i]] = obj[objKeys[i]]
   }
   return newObj
 }
 
 /**
  * 将对象转为url的query参数
- * @param obj 
+ * @param obj
  * @returns query字符串
  */
 const objToQuery = (obj: Record<string, any>): string => {
@@ -310,10 +337,9 @@ const objToQuery = (obj: Record<string, any>): string => {
   return query
 }
 
-
 /**
  * 将url的query参数转为对象
- * @param obj 
+ * @param query
  * @returns query对象
  */
 const queryToObj = (query: string): Record<string, any> => {
@@ -335,9 +361,11 @@ const queryToObj = (query: string): Record<string, any> => {
  */
 const downloadFile = (res: any, name: string = '', type = 'xlsx') => {
   // 文件名
-  let fileName = res.headers?.['content-disposition']?.split('=')?.[1] ? decodeURI(res.headers['content-disposition'].split('=')[1]) : name
+  let fileName = res.headers?.['content-disposition']?.split('=')?.[1]
+    ? decodeURI(res.headers['content-disposition'].split('=')[1])
+    : name
   // 特殊处理名称所包含的特殊字符
-  fileName = fileName.indexOf('\'\'') > -1 ? fileName.split('\'\'')[1] : fileName
+  fileName = fileName.indexOf("''") > -1 ? fileName.split("''")[1] : fileName
   // 不是Excel取名方式需要变更
   if (type !== 'xlsx') {
     fileName = decodeURI(res.headers?.['content-disposition'].split('; ')[1])
@@ -370,16 +398,31 @@ const selectFile = ({ max = 1, accept = '*' }) => {
       const inputTarget = event.target as HTMLInputElement
       if (inputTarget.files && inputTarget.files.length > 0) {
         const file = Array.from(inputTarget.files).slice(0, max)
-        resolve(file); // 成功选择文件
+        resolve(file) // 成功选择文件
       } else {
         reject() //失败
       }
-    });
+    })
 
     document.body.appendChild(input)
     input.click()
     document.body.removeChild(input)
-  }).then((res) => ({ err: null, res })).catch((err: string) => ({ err, res: null }))
+  })
+    .then((res) => ({ err: null, res }))
+    .catch((err: string) => ({ err, res: null }))
+}
+
+/**
+ * 下载文件
+ * @param {number | string} px 结果
+ * @param {number} width 设计稿宽度
+ * @returns 转化后的宽度
+ */
+const pxToVw = (px: number | string, width = 750) => {
+  if (!isNumber(px)) {
+    return px
+  }
+  return `${(Number(px) / width) * 100}vw`
 }
 
 export {
@@ -400,5 +443,6 @@ export {
   objToQuery, // 将对象转为url的query参数
   queryToObj, // 将url的query参数转为对象
   downloadFile, // 下载文件
-  selectFile // 选择文件
+  selectFile, // 选择文件
+  pxToVw // px转vw
 }
