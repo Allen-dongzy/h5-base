@@ -20,7 +20,7 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-    quotes: ['error', 'single'], // 优先使用单引号
+    quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }], // 优先使用单引号
     'jsx-quotes': ['error', 'prefer-single'], // 在jsx中使用单引号
     semi: ['error', 'never'], // 结尾没有分号
     'comma-dangle': ['error', 'never'], // 对象中最后一个属性的结尾没有逗号

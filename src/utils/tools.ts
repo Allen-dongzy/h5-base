@@ -1,161 +1,30 @@
 import { isNumber } from 'lodash-es'
 
-export interface IUnknownTime {
-  Y: number
-  M: number
-  D: number
-  h: number
-  m: number
-  s: number
-}
-
-/**
- * 时间戳转换为常用时间形式
- * (默认转换为对象格式)
- * @param {number | string} timestamp 时间戳
- * @param {string} mode 要转换成的模式
- * @returns {Date | Object | string | null} 可以渲染的时间格式
- */
-const toTime = (
-  timestamp: number | string,
-  mode: string = 'Object'
-): Date | object | string | null => {
-  if (!timestamp) return null
-  const timeLen = timestamp.toString().length
-  if (timeLen !== 10 && timeLen !== 13) return null
-  timestamp = timeLen === 13 ? Number(timestamp) : Number(timestamp) * 1000
-  const date = new Date(timestamp)
-  const Y = numberFormat(date.getFullYear())
-  const M = numberFormat(date.getMonth() + 1)
-  const D = numberFormat(date.getDate())
-  const h = numberFormat(date.getHours())
-  const m = numberFormat(date.getMinutes())
-  const s = numberFormat(date.getSeconds())
-  let result = null
-  switch (mode) {
-    case 'Date':
-      result = new Date(timestamp)
-      break
-    case 'Object':
-      result = { Y, M, D, h, m, s }
-      break
-    case '-':
-      result = `${Y}-${M}-${D} ${h}:${m}:${s}`
-      break
-    case '/':
-      result = `${Y}/${M}/${D} ${h}:${m}:${s}`
-      break
-  }
-  return result
-}
-
-/**
- * 常用时间形式转换为时间戳
- * @param {Date | string | IUnknownTime} unknownTime 未知的时间形式
- * @param {number} len 时间戳长度
- * @returns {number | null} 时间戳
- */
-const toTimestamp = (
-  unknownTime: Date | string | IUnknownTime,
-  len: number = 13
-): number | null => {
-  if (!unknownTime) return null
-  let result: number | null = null
-  const type = getType(unknownTime)
-  if (type === 'Date') {
-    result = (unknownTime as Date).getTime()
-  } else if (type === 'Object') {
-    const { Y, M, D, h, m, s } = unknownTime as IUnknownTime
-    result = new Date(Y, M - 1, D, h, m, s).getTime()
-  } else if (type === 'String') {
-    const date = (unknownTime as string).split(' ')[0]
-    const time = (unknownTime as string).split(' ')[1]
-    const timeArr: Array<any> = time.split(':')
-    let dateArr: Array<any> = []
-    if (~date.indexOf('/')) {
-      dateArr = date.split('/')
-    } else if (~date.indexOf('-')) {
-      dateArr = date.split('-')
-    }
-    result = new Date(
-      dateArr[0],
-      dateArr[1] - 1,
-      dateArr[2],
-      timeArr[0],
-      timeArr[1],
-      timeArr[2]
-    ).getTime()
-  }
-  if (len === 10) (result as number) /= 1000
-  return result
-}
-
-/**
- * 若只有一个时间戳，则计算指定时间戳与当前时间戳的的差值
- * 若有两个时间戳，则计算两个指定时间戳之间的差值
- * @param {number | string} timeStamp1 第一个时间戳
- * @param {number | string | null} timeStamp2 第二个时间戳
- * @returns {number} 时间戳差值
- */
-const timeStampDiff = (
-  timeStamp1: number | string,
-  timeStamp2: number | string | null = null
-): number => {
-  if (!timeStamp2) {
-    timeStamp2 = timeStamp1
-    timeStamp1 = Date.now()
-  }
-  return (timeStamp2 as number) - (timeStamp1 as number)
-}
-
 /**
  * 时间戳差值转换为时间间隔
  * (做倒计时使用)
  * @param {number} timeStamp 时间戳差值
- * @returns {{D: string, h: string, m: string, s: string} | null} 倒计时对象，里面含有天时分秒
+ * @returns {D: string, h: string, m: string, s: string} 倒计时对象，里面含有天时分秒
  */
-const toInterval = (
-  timeStamp: number
-): { D: string | number; h: string | number; m: string | number; s: string | number } | null => {
-  const D = numberFormat(parseInt((timeStamp / 86400).toString())) as string | number
+const toInterval = (timeStamp: number) => {
+  const D = numberFormat(parseInt((timeStamp / 86400).toString()))
   timeStamp = timeStamp % 86400
-  const h = numberFormat(parseInt((timeStamp / 3600).toString())) as string | number
+  const h = numberFormat(parseInt((timeStamp / 3600).toString()))
   timeStamp = timeStamp % 3600
-  const m = numberFormat(parseInt((timeStamp / 60).toString())) as string | number
+  const m = numberFormat(parseInt((timeStamp / 60).toString()))
   timeStamp = timeStamp % 60
-  const s = numberFormat(parseInt(timeStamp.toString())) as string | number
+  const s = numberFormat(parseInt(timeStamp.toString()))
   return { D, h, m, s }
-}
-
-/**
- * 若传入正确的时间字符串以及指定格式，则将时间转换为指定的平台
- * 若传入正确的时间字符串却没有传入格式，时间将在iOS和非iOS平台之间相互转换
- * @param {string} time 时间字符串
- * @returns {string | null} 转换后的时间字符串
- */
-const timePlatformTransform = (time: string, mode: string = '/'): string => {
-  if (!time) return time
-  const date = time.split(' ')[0]
-  if (mode === '/' && ~date.indexOf('-')) {
-    time = time.replace(/-/g, '/')
-  } else if (mode === '-' && ~date.indexOf('/')) {
-    time = time.replace(/\//g, '-')
-  } else if (!mode && ~date.indexOf('-')) {
-    time = time.replace(/-/g, '/')
-  } else if (!mode && ~date.indexOf('/')) {
-    time = time.replace(/\//g, '-')
-  }
-  return time
 }
 
 /**
  * 数字格式化
  * @param {number | string} num 数字
  * @param {number} len 长度(默认为2)
- * @returns {null | string | number} 格式化后的数字
+ * @returns {string | number} 格式化后的数字
  */
-const numberFormat = (num: number | string, len: number = 2): null | string | number => {
-  if (!num && num !== 0) return null
+const numberFormat = (num: number | string, len: number = 2) => {
+  if (!num && num !== 0) return num
   let numLength = num.toString().length
   while (numLength++ < len) {
     num = '0' + num
@@ -166,11 +35,12 @@ const numberFormat = (num: number | string, len: number = 2): null | string | nu
 /**
  * 获取变量的类型
  * @param {any} variable 被判断的变量
- * @returns {string | null} 变更量的类型(大写)
+ * @returns {string | null} 变更量的类型(小)
  */
 const getType = (variable: any): string | null => {
   if (!variable) return null
-  return Object.prototype.toString.call(variable).replace(/^\[object (\S+)]$/, '$1')
+  const type = Object.prototype.toString.call(variable).replace(/^\[object (\S+)]$/, '$1')
+  return type.toLowerCase()
 }
 
 /**
@@ -325,8 +195,8 @@ const objRemoveEmpty = (obj: Record<string, any>): object => {
 
 /**
  * 将对象转为url的query参数
- * @param obj
- * @returns query字符串
+ * @param {object} obj
+ * @returns {string} query字符串
  */
 const objToQuery = (obj: Record<string, any>): string => {
   const objKeys = Object.keys(obj)
@@ -339,8 +209,8 @@ const objToQuery = (obj: Record<string, any>): string => {
 
 /**
  * 将url的query参数转为对象
- * @param query
- * @returns query对象
+ * @param {string} query
+ * @returns {object} query对象
  */
 const queryToObj = (query: string): Record<string, any> => {
   if (query?.[0] === '?') query = query.slice(1)
@@ -356,35 +226,42 @@ const queryToObj = (query: string): Record<string, any> => {
 /**
  * 下载文件
  * @param {any} res 结果
- * @param {string} type 文件名
- * @returns void
+ * @param {string} name 文件名
+ * @returns {void} 无
  */
-const downloadFile = (res: any, name: string = '', type = 'xlsx') => {
+const downloadFile = (url: string, name: string) => {
+  const a = document.createElement('a')
+  a.href = url
+  a.download = name
+  a.click()
+  a.remove()
+}
+
+/**
+ * 下载excel
+ * @param {any} res 结果
+ * @param {string} name 文件名
+ * @returns {void} 无
+ */
+const downloadExcel = (res: any, name?: string) => {
   // 文件名
   let fileName = res.headers?.['content-disposition']?.split('=')?.[1]
     ? decodeURI(res.headers['content-disposition'].split('=')[1])
-    : name
+    : name || ''
   // 特殊处理名称所包含的特殊字符
   fileName = fileName.indexOf("''") > -1 ? fileName.split("''")[1] : fileName
-  // 不是Excel取名方式需要变更
-  if (type !== 'xlsx') {
-    fileName = decodeURI(res.headers?.['content-disposition'].split('; ')[1])
-  }
   // 文件
   const file = new Blob([res.data], { type: 'application/vnd.ms-excel' })
   const url = URL.createObjectURL(file)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = fileName
-  a.click()
-  a.remove()
+  // 下载
+  downloadFile(url, fileName)
 }
 
 /**
  * 选择文件
  * @param {any} res 结果
  * @param {string} accept 文件类型
- * @returns file
+ * @returns {Promise<File[]>} 选择的文件
  */
 const selectFile = ({ max = 1, accept = '*' }) => {
   return new Promise<File[]>((resolve, reject) => {
@@ -413,10 +290,10 @@ const selectFile = ({ max = 1, accept = '*' }) => {
 }
 
 /**
- * 下载文件
+ * px转vw
  * @param {number | string} px 结果
  * @param {number} width 设计稿宽度
- * @returns 转化后的宽度
+ * @returns {string} 转化后的宽度
  */
 const pxToVw = (px: number | string, width = 750) => {
   if (!isNumber(px)) {
@@ -426,11 +303,7 @@ const pxToVw = (px: number | string, width = 750) => {
 }
 
 export {
-  toTime, // 时间戳转换为常用时间形式
-  toTimestamp, // 常用时间形式转换为时间戳
-  timeStampDiff, // 计算时间戳的差值
   toInterval, // 时间戳转换为时间间隔
-  timePlatformTransform, // 时间平台转换
   numberFormat, // 数字格式化
   getType, // 获取变量的类型
   hideMobile, // 隐藏手机号
@@ -443,6 +316,7 @@ export {
   objToQuery, // 将对象转为url的query参数
   queryToObj, // 将url的query参数转为对象
   downloadFile, // 下载文件
+  downloadExcel, // 下载excel
   selectFile, // 选择文件
   pxToVw // px转vw
 }
