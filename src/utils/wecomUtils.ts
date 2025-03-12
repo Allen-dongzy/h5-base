@@ -33,11 +33,7 @@ export const init = async () => {
   const { res: agentJsApiRes, err: agentJsApiErr } = await getAgentJsApiInfo()
   if (agentJsApiErr) return showToast('获取agentJsApi签名失败')
   jsSdkData.agentJsApiData = agentJsApiRes.data
-  if (
-    Object.keys(jsSdkData.jsApiData).length === 0 ||
-    Object.keys(jsSdkData.agentJsApiData).length === 0
-  )
-    return
+  if (!jsSdkData.jsApiData.signature || !jsSdkData.agentJsApiData.signature) return
   register()
 }
 
