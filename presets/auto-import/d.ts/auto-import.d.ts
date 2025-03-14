@@ -6,6 +6,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
+  const Entry: typeof import('../../../src/stores/useWecomStore')['Entry']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
@@ -66,7 +67,7 @@ declare global {
   const unref: typeof import('vue')['unref']
   const useAppStore: typeof import('../../../src/stores/useAppStore')['default']
   const useAttrs: typeof import('vue')['useAttrs']
-  const useCounterStore: typeof import('../../../src/stores/counter')['useCounterStore']
+  const useCounterStore: (typeof import('../../../src/stores/counter'))['useCounterStore']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useLink: typeof import('vue-router')['useLink']
@@ -74,6 +75,7 @@ declare global {
   const useRouter: typeof import('vue-router')['useRouter']
   const useSlots: typeof import('vue')['useSlots']
   const useUserStore: typeof import('../../../src/stores/useUserStore')['default']
+  const useWecomStore: typeof import('../../../src/stores/useWecomStore')['default']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
   const watchPostEffect: typeof import('vue')['watchPostEffect']

@@ -10,25 +10,33 @@ export enum Entry {
   normal = 'normal' // 除以上场景之外进入，例如工作台，聊天会话等
 }
 
-const useWecomStore = defineStore('useWecomStore', () => {
-  // 企微页面的入口类型
-  const entry = ref<Entry>(Entry.normal)
-  // 设置入口类型
-  const setEntry = (currentEntry: Entry) => {
-    entry.value = currentEntry
-  }
-  // 是否为1v1会话进入
-  const is1v1 = computed(() => {
-    return [Entry.chain_single_chat_tools, Entry.single_chat_tools, Entry.contact_profile].includes(
-      entry.value
-    )
-  })
+const useWecomStore = defineStore(
+  'useWecomStore',
+  () => {
+    // 企微页面的入口类型
+    const entry = ref<Entry>(Entry.normal)
+    // 设置入口类型
+    const setEntry = (currentEntry: Entry) => {
+      entry.value = currentEntry
+    }
+    // 是否为1v1会话进入
+    const is1v1 = computed(() => {
+      return [
+        Entry.chain_single_chat_tools,
+        Entry.single_chat_tools,
+        Entry.contact_profile
+      ].includes(entry.value)
+    })
 
-  return {
-    entry,
-    setEntry,
-    is1v1
+    return {
+      entry,
+      setEntry,
+      is1v1
+    }
+  },
+  {
+    persist: true
   }
-})
+)
 
 export default useWecomStore
