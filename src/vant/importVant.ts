@@ -26,8 +26,11 @@ import {
   CheckboxGroup,
   Uploader,
   Picker,
+  TimePicker,
   Grid,
   GridItem,
+  Swipe,
+  SwipeItem,
   SwipeCell,
   Stepper,
   Lazyload,
@@ -67,8 +70,11 @@ const importVant = (app: App<Element>) => {
   app.use(CheckboxGroup)
   app.use(Uploader)
   app.use(Picker)
+  app.use(TimePicker)
   app.use(Grid)
   app.use(GridItem)
+  app.use(Swipe)
+  app.use(SwipeItem)
   app.use(SwipeCell)
   app.use(Stepper)
   app.use(Lazyload)
