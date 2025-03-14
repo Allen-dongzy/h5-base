@@ -1,6 +1,6 @@
 import * as ww from '@wecom/jssdk'
 import type { SignatureData } from '@wecom/jssdk'
-import { getJsApiInfo, getAgentJsApiInfo } from '@/apis/auth'
+import { getJsApiInfo, getAgentJsApiInfo } from '@/apis/debug'
 import { showToast } from 'vant'
 
 // jssdk签名数据
