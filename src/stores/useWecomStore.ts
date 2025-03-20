@@ -28,10 +28,19 @@ const useWecomStore = defineStore(
       ].includes(entry.value)
     })
 
+    // 外部联系人id
+    const externalUserId = ref('')
+    // 设置外部联系人id
+    const setExternalUserId = (id: string) => {
+      externalUserId.value = id
+    }
+
     return {
       entry,
       setEntry,
-      is1v1
+      is1v1,
+      externalUserId,
+      setExternalUserId
     }
   },
   {

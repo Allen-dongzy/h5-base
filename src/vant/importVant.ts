@@ -27,6 +27,7 @@ import {
   Uploader,
   Picker,
   TimePicker,
+  DatePicker,
   Grid,
   GridItem,
   Swipe,
@@ -71,6 +72,7 @@ const importVant = (app: App<Element>) => {
   app.use(Uploader)
   app.use(Picker)
   app.use(TimePicker)
+  app.use(DatePicker)
   app.use(Grid)
   app.use(GridItem)
   app.use(Swipe)
