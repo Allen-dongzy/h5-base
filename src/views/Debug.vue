@@ -3,6 +3,10 @@ import useUserStore from '@/stores/useUserStore'
 import { ref } from 'vue'
 import useWecomStore, { Entry } from '@/stores/useWecomStore'
 
+defineOptions({
+  name: 'Debug'
+})
+
 // debug登录
 const { debugLoginApi } = useUserStore()
 // 企微入口， 外部联系人id

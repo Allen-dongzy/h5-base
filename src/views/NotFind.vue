@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
+defineOptions({
+  name: 'NotFind'
+})
+
 const router = useRouter()
 
 const goHome = () => {

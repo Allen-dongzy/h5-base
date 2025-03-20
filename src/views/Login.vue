@@ -4,6 +4,10 @@ import { routes } from '@/router'
 // import useUserStore from '@/stores/useUserStore'
 // const { qrLoginApi } = useUserStore()
 
+defineOptions({
+  name: 'Login'
+})
+
 // 路由
 const router = useRouter()
 const currentRoute = router.currentRoute.value

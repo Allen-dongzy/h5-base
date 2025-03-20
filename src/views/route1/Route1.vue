@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineOptions({
+  name: 'Route1'
+})
+</script>
 
 <template>
   <div class="route1">route1</div>
