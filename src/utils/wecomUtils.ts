@@ -34,7 +34,7 @@ export const init = async () => {
   const { res: jsApiRes, err: jsApiErr } = await getJsApiInfo({
     url: window.location.href.split('#')[0]
   })
-  if (jsApiErr) return showToast('获取jsapi签名失败')
+  if (jsApiErr) return showToast('获取jsApi签名失败')
   jsSdkData.jsApiData = {
     timestamp: jsApiRes.data.timestamp!,
     nonceStr: jsApiRes.data.nonceStr!,
@@ -69,16 +69,38 @@ const register = () => {
     // 需要使用的JSAPI列表
     jsApiList: getJsApiList(),
     // 获取微信应用jssdk签名
-    getConfigSignature,
-    // 获取企微内建应用jssdk签名
-    getAgentConfigSignature,
+    getConfigSignature: () => {
+      const { timestamp, nonceStr, signature } = jsSdkData.jsApiData
+      return { timestamp, nonceStr, signature }
+    },
+    // 微信sdk注册成功
+    onConfigSuccess: (res) => {
+      console.log('jssdk注册成功:\n', res)
+    },
     // 微信sdk注册失败
     onConfigFail: (err) => {
       console.log('jssdk注册失败:\n', err)
     },
+    // 微信sdk注册完成
+    onConfigComplete: (res) => {
+      console.log('jssdk注册完成:\n', res)
+    },
+    // 获取企微内建应用jssdk签名
+    getAgentConfigSignature: () => {
+      const { timestamp, nonceStr, signature } = jsSdkData.agentJsApiData
+      return { timestamp, nonceStr, signature }
+    },
+    // 企微内建应用sdk注册成功
+    onAgentConfigSuccess: (res) => {
+      console.log('agentJssdk注册成功:\n', res)
+    },
     // 企微内建应用sdk注册失败
     onAgentConfigFail: (err) => {
       console.log('agentJssdk注册失败:\n', err)
+    },
+    // 企微内建应用sdk注册完成
+    onAgentConfigComplete: (res) => {
+      console.log('agentJssdk注册完成:\n', res)
     }
   })
 }
@@ -97,16 +119,4 @@ const getJsApiList = () => {
     'launchMiniprogram',
     'openEnterpriseChat'
   ]
-}
-
-// 获取微信应用jssdk签名
-const getConfigSignature = () => {
-  const { timestamp, nonceStr, signature } = jsSdkData.jsApiData
-  return { timestamp, nonceStr, signature }
-}
-
-// 获取企微内建应用jssdk签名
-const getAgentConfigSignature = () => {
-  const { timestamp, nonceStr, signature } = jsSdkData.agentJsApiData
-  return { timestamp, nonceStr, signature }
 }
