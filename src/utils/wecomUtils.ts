@@ -1,12 +1,13 @@
 import * as ww from '@wecom/jssdk'
 import type { SignatureData } from '@wecom/jssdk'
-import { getJsApiInfo, getAgentJsApiInfo } from '@/apis/debug'
+import { getJsApiInfo, getAgentJsApiInfo } from '@/apis/wecom'
 import { showToast } from 'vant'
 
 // jssdk签名数据
 interface JsSdkData {
   jsApiData: SignatureData
-  agentJsApiData: SignatureData & { corpId: string; agentId: string }
+  agentJsApiData: SignatureData
+  agentData: { corpId: string; agentId: string }
 }
 const jsSdkData: JsSdkData = {
   // 微信应用jssdk签名数据
@@ -19,7 +20,10 @@ const jsSdkData: JsSdkData = {
   agentJsApiData: {
     timestamp: '',
     nonceStr: '',
-    signature: '',
+    signature: ''
+  },
+  // 企微信息
+  agentData: {
     corpId: '',
     agentId: ''
   }
@@ -27,19 +31,36 @@ const jsSdkData: JsSdkData = {
 
 // 初始化
 export const init = async () => {
-  const { res: jsApiRes, err: jsApiErr } = await getJsApiInfo()
+  const { res: jsApiRes, err: jsApiErr } = await getJsApiInfo({
+    url: window.location.href.split('#')[0]
+  })
   if (jsApiErr) return showToast('获取jsapi签名失败')
-  jsSdkData.jsApiData = jsApiRes.data
-  const { res: agentJsApiRes, err: agentJsApiErr } = await getAgentJsApiInfo()
+  jsSdkData.jsApiData = {
+    timestamp: jsApiRes.data.timestamp!,
+    nonceStr: jsApiRes.data.nonceStr!,
+    signature: jsApiRes.data.signature!
+  }
+  const { res: agentJsApiRes, err: agentJsApiErr } = await getAgentJsApiInfo({
+    url: window.location.href.split('#')[0]
+  })
   if (agentJsApiErr) return showToast('获取agentJsApi签名失败')
-  jsSdkData.agentJsApiData = agentJsApiRes.data
-  if (!jsSdkData.jsApiData.signature || !jsSdkData.agentJsApiData.signature) return
+  jsSdkData.agentJsApiData = {
+    timestamp: agentJsApiRes.data.timestamp!,
+    nonceStr: agentJsApiRes.data.nonceStr!,
+    signature: agentJsApiRes.data.signature
+  }
+  jsSdkData.agentData = {
+    corpId: agentJsApiRes.data.corpId!,
+    agentId: agentJsApiRes.data.agentId!
+  }
+  if (!jsSdkData.jsApiData.signature || !jsSdkData.agentJsApiData.signature)
+    return showToast('签名信息不全')
   register()
 }
 
 // 注册
 const register = () => {
-  const { corpId, agentId } = jsSdkData.agentJsApiData
+  const { corpId, agentId } = jsSdkData.agentData
   ww.register({
     // 企业ID
     corpId,
