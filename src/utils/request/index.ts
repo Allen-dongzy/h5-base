@@ -36,7 +36,7 @@ const setHeader = (config: AxiosRequestConfig) => {
   const { token } = storeToRefs(userStore)
   // 判断是否走JWT
   if (token.value) {
-    (config.headers as any).token = token.value
+    ;(config.headers as any).token = token.value
   }
 }
 
@@ -133,9 +133,11 @@ const httpErrorHandler = (err: AxiosError<Request.ResponseData>) => {
 // 下载excel文件
 const downloadFile = (res: AxiosResponse) => {
   // 文件名
-  let fileName = res.headers?.['content-disposition']?.split('=')?.[1] ? decodeURI(res.headers['content-disposition'].split('=')[1]) : '文件'
+  let fileName = res.headers?.['content-disposition']?.split('=')?.[1]
+    ? decodeURI(res.headers['content-disposition'].split('=')[1])
+    : '文件'
   // 特殊处理名称所包含的特殊字符
-  fileName = fileName.indexOf('\'\'') > -1 ? fileName.split('\'\'')[1] : fileName
+  fileName = fileName.indexOf("''") > -1 ? fileName.split("''")[1] : fileName
   // 文件
   const file = new Blob([res.data], { type: 'application/vnd.ms-excel' })
   const url = URL.createObjectURL(file)
@@ -183,12 +185,12 @@ const goLogin = debounce(() => {
   const { setToken, setUserinfo } = useUserStore()
   setToken()
   setUserinfo()
-  // 跳转到登陆页
+  // 处理登陆
   const baseURL = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL
   if (import.meta.env.DEV) {
     window.location.replace(`${baseURL}/debug?redirect=${encodeURIComponent(window.location.href)}`)
   } else {
-    window.location.replace(`${baseURL}/login?redirect=${encodeURIComponent(window.location.href)}`)
+    // userLoginSessionUrlApi()是获取授权地址并跳转的接口
   }
 })
 
@@ -224,7 +226,7 @@ const request = async <T = any>(requestData: Request.RequestData) => {
   // 参数转换
   transRequestData(requestData)
   // Promise的then和catch处理包装
-  return (Server<Request.ResponseData<T>>(requestData))
+  return Server<Request.ResponseData<T>>(requestData)
     .then((res) => {
       return { err: null, res: res.data }
     })

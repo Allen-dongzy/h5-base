@@ -92,7 +92,10 @@ onMounted(async () => {
   } else {
     // OAuth2授权链接携带code重定向回来执行登录
     console.log('OAuth2授权链接携带code重定向回来执行登录')
-    // 登录成功后执行初始化操作（jssdk，公共用户信息等）
+    // 登录成功后，将url中的授权参数去除，以防多次登录以及jssdk初始化失败
+    const url = window.location.href.split('?')[0]
+    window.history.replaceState({}, '', url)
+    // 执行初始化操作（jssdk，公共用户信息等）
     // if (xxxxx) init()
   }
 })
