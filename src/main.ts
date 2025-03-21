@@ -6,6 +6,7 @@ import importRouter from '@/router/importRouter'
 import importStores from '@/stores/importStores'
 import importVant from '@/vant/importVant'
 import importLocales from '@/locales/importLocales'
+import importVconsole from '@/utils/importVconsole'
 
 // css
 import '@/assets/styles/reset.scss'
@@ -22,6 +23,8 @@ importStores(app)
 importVant(app)
 // 引入locales
 importLocales(app)
+// 引入vconsole
+importVconsole()
 
 app.mount('#app')
 

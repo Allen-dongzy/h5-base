@@ -23,7 +23,7 @@ interface JSApiInfodata {
   nonceStr: string
   timestamp: number
   signature: string
-  agentId?: string
-  corpId?: string
+  agentId: string
+  corpId: string
   url?: string
 }
