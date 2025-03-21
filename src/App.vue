@@ -67,12 +67,12 @@ const { setEntry } = useWecomStore()
 const init = async () => {
   // 获取用户信息等
   // js-sdk
-  const res = await register()
-  if (res) {
-    const res = await getContext()
-    if (!res) return
-    setEntry(res!.entry)
-  }
+  // const res = await register()
+  // if (res) {
+  //   const res = await getContext()
+  //   if (!res) return
+  //   setEntry(res!.entry)
+  // }
 }
 
 // 授权

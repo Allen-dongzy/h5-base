@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import useUserStore from '@/stores/useUserStore'
 import { ref } from 'vue'
-import useWecomStore, { Entry } from '@/stores/useWecomStore'
+import useWecomStore from '@/stores/useWecomStore'
+import { EntryType } from '@wecom/jssdk'
 
 defineOptions({
   name: 'Debug'
 })
 
 // debug登录
-const { debugLoginApi } = useUserStore()
+const { setToken } = useUserStore()
 // 企微入口， 外部联系人id
 const { setEntry, setExternalUserId } = useWecomStore()
 // 路由
@@ -19,10 +20,10 @@ const currentRoute = route.currentRoute.value
 const { redirect } = currentRoute.query
 
 // 企微入口
-const entryValue = ref(Entry.normal)
+const entryValue = ref(EntryType.normal)
 const entryShow = ref(false)
-const entryActions = Object.keys(Entry).map((item) => ({ name: item, color: '#003594' }))
-const entrySelect = (item: { name: Entry }) => {
+const entryActions = Object.keys(EntryType).map((item) => ({ name: item, color: '#003594' }))
+const entrySelect = (item: { name: EntryType }) => {
   entryValue.value = item.name
   entryShow.value = false
 }
@@ -43,8 +44,11 @@ const skip = () => {
 // 登录
 const login = async () => {
   if (!userId.value) return
-  const isSuccess = await debugLoginApi(userId.value)
-  if (!isSuccess) return
+  // debug登录
+  // const isSuccess = await debugLoginApi(userId.value)
+  // if (!isSuccess) return
+  // 设置token--模拟登录
+  setToken('token')
   // 设置企微入口， 外部联系人id
   setEntry(entryValue.value)
   setExternalUserId(externalUserId.value)
